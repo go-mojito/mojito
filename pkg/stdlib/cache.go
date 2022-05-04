@@ -78,7 +78,6 @@ func (m *BuiltinCache) GetOrDefault(key string, out interface{}, def interface{}
 		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(cache))
 	} else {
 		reflect.ValueOf(out).Elem().Set(reflect.ValueOf(def))
-		out = def
 	}
 	return nil
 }
