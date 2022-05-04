@@ -100,5 +100,7 @@ func (g *builtinGroup) Middleware() []interface{} {
 }
 
 func NewGroup() Group {
-	return &builtinGroup{}
+	return &builtinGroup{
+		routes: make(map[string]builtinGroupRoute),
+	}
 }
