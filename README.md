@@ -13,7 +13,7 @@
 	<a href="https://github.com/go-mojito/mojito/blob/main/LICENSE" alt="Licence">
         <img src="https://img.shields.io/github/license/Ileriayo/markdown-badges?style=flat-square" /></a>
 	<a href="https://makeapullrequest.com">
-        <img src="https://img.shields.aio/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a>
+        <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a>
 </p>
 
 <p align="center">
