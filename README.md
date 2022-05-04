@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-Go-Mojito is a super-modular library to bootstrap your next Go web project. It can be used for strict API-only purposes as well as server-side rendering.
+Mojito is a super-modular library to bootstrap your next Go web project. It can be used for strict API-only purposes as well as server-side rendering.
 </p>
 
 <p align="center"><strong>SonarCloud Report</strong></p>
