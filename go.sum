@@ -3,6 +3,8 @@ github.com/infinytum/injector v0.0.1 h1:MYHfr75NAeQ66YKDYaer6BgHLbD/UD3o/mCTZcEn
 github.com/infinytum/injector v0.0.1/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
 github.com/infinytum/structures v0.0.1 h1:DgwnAkvodCn2Zn07/PGM+vZZIlhCZJ+602KudwbQSt8=
 github.com/infinytum/structures v0.0.1/go.mod h1:4vDl7BamOX2fF0B+h2n/xGIorGv1u9ZQ9wgF6IW/Kc8=
+github.com/infinytum/structures v0.0.2 h1:h/0EvNICrqynCKaKoO/6djR+cPLS2wj8KHAzPt0r4k0=
+github.com/infinytum/structures v0.0.2/go.mod h1:4vDl7BamOX2fF0B+h2n/xGIorGv1u9ZQ9wgF6IW/Kc8=
 github.com/mitchellh/hashstructure/v2 v2.0.2 h1:vGKWl0YJqUNxE8d+h8f6NJLcCJrgbhC4NcD46KavDd4=
 github.com/mitchellh/hashstructure/v2 v2.0.2/go.mod h1:MG3aRVU/N29oo/V/IhBX8GR/zz4kQkprJgF2EVszyDE=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
