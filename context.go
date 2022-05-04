@@ -18,7 +18,7 @@ type RendererContext interface {
 	// to the response body using the response object's ViewBag
 	View(view string) error
 
-	// MustView is like view wiht panicing
+	// MustView will execute View and panic if an error is returned
 	MustView(view string)
 
 	// ViewBag
