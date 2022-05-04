@@ -7,6 +7,18 @@ import (
 	"github.com/infinytum/injector"
 )
 
+func newNextFuncFactory(ctx Context, next HandlerFunc) reflect.Value {
+	if next == nil {
+		return reflect.ValueOf(func() error {
+			// Do nothing because it's an empty default handler
+			return nil
+		})
+	}
+	return reflect.ValueOf(func() error {
+		return next(ctx)
+	})
+}
+
 // newDefaultHandlerArgFactory will create a fake factory that attempts to dependency inject the argument.
 func newDefaultHandlerArgFactory(forType reflect.Type) (HandlerIntrospectorArgFactory, error) {
 	isPointer := false

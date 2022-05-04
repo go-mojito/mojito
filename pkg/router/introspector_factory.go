@@ -17,6 +17,10 @@ func init() {
 	RegisterHandlerArgFactory[http.ResponseWriter](stdlibResponseFactory)
 	RegisterHandlerArgFactory[http.Handler](stdlibHandlerFactory)
 	RegisterHandlerArgFactory[http.HandlerFunc](stdlibHandlerFactory)
+
+	// Middleware-related
+	RegisterHandlerArgFactory[func() error](newNextFuncFactory)
+	RegisterHandlerArgFactory[HandlerFunc](newNextFuncFactory)
 }
 
 // RegisterHandlerArgFactory will register a factory function for the given generic type
