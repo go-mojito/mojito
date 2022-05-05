@@ -1,5 +1,7 @@
 github.com/infinytum/injector v0.0.1 h1:MYHfr75NAeQ66YKDYaer6BgHLbD/UD3o/mCTZcEnXjA=
 github.com/infinytum/injector v0.0.1/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
+github.com/infinytum/injector v0.0.2 h1:isJZ27MvijpoQzzJaOWLqfyczp1EP9CM786Ef1KelFI=
+github.com/infinytum/injector v0.0.2/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
 github.com/infinytum/structures v0.0.2 h1:h/0EvNICrqynCKaKoO/6djR+cPLS2wj8KHAzPt0r4k0=
 github.com/infinytum/structures v0.0.2/go.mod h1:4vDl7BamOX2fF0B+h2n/xGIorGv1u9ZQ9wgF6IW/Kc8=
 github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
