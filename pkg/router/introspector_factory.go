@@ -21,6 +21,9 @@ func init() {
 	// Middleware-related
 	RegisterHandlerArgFactory[func() error](newNextFuncFactory)
 	RegisterHandlerArgFactory[HandlerFunc](newNextFuncFactory)
+
+	// Context
+	RegisterHandlerArgFactory[Context](newContextFactory)
 }
 
 // RegisterHandlerArgFactory will register a factory function for the given generic type

@@ -7,6 +7,10 @@ import (
 	"github.com/infinytum/injector"
 )
 
+func newContextFactory(ctx Context, next HandlerFunc) reflect.Value {
+	return reflect.ValueOf(ctx)
+}
+
 func newNextFuncFactory(ctx Context, next HandlerFunc) reflect.Value {
 	if next == nil {
 		return reflect.ValueOf(func() error {
