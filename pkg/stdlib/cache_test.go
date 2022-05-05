@@ -73,7 +73,7 @@ func Test_BuiltinCache_Contains(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &BuiltinCache{
+			m := &Cache{
 				cacheMap:         tt.fields.cacheMap,
 				expireContextMap: tt.fields.expireContextMap,
 			}
@@ -141,7 +141,7 @@ func Test_BuiltinCache_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &BuiltinCache{
+			m := &Cache{
 				cacheMap:         tt.fields.cacheMap,
 				expireContextMap: tt.fields.expireContextMap,
 			}
@@ -214,7 +214,7 @@ func Test_BuiltinCache_Set(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &BuiltinCache{
+			m := &Cache{
 				cacheMap:         tt.fields.cacheMap,
 				expireContextMap: tt.fields.expireContextMap,
 			}
@@ -276,7 +276,7 @@ func Test_BuiltinCache_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &BuiltinCache{
+			m := &Cache{
 				cacheMap:         tt.fields.cacheMap,
 				expireContextMap: tt.fields.expireContextMap,
 			}
@@ -335,7 +335,7 @@ func Test_BuiltinCache_GetOrDefault(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &BuiltinCache{
+			m := &Cache{
 				cacheMap:         tt.fields.cacheMap,
 				expireContextMap: tt.fields.expireContextMap,
 			}
@@ -393,7 +393,7 @@ func Test_BuiltinCache_ExpireAfter(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &BuiltinCache{
+			m := &Cache{
 				cacheMap:         tt.fields.cacheMap,
 				expireContextMap: tt.fields.expireContextMap,
 			}

@@ -11,7 +11,7 @@ import (
 	"github.com/go-mojito/mojito/pkg/renderer"
 )
 
-type BuiltinRenderer struct {
+type Renderer struct {
 	// templateDir is the base path for all templates
 	// This is used by the renderer implementation to figure out where to look for views.
 	templateDir string
@@ -19,7 +19,7 @@ type BuiltinRenderer struct {
 
 // Render will load a template file and render the template
 // within using the viewbag as a context
-func (b BuiltinRenderer) Render(view string, bag renderer.ViewBag) (string, error) {
+func (b Renderer) Render(view string, bag renderer.ViewBag) (string, error) {
 	file, err := ioutil.ReadFile(b.normalizeViewPath(view))
 	if err != nil {
 		return "", err
@@ -37,13 +37,13 @@ func (b BuiltinRenderer) Render(view string, bag renderer.ViewBag) (string, erro
 }
 
 // SetTemplateDir will set the base directory where views are located
-func (b BuiltinRenderer) SetTemplateDir(path string) error {
+func (b Renderer) SetTemplateDir(path string) error {
 	b.templateDir = path
 	return nil
 }
 
 // TemplateDir will return the absolute path of the configured templates directory
-func (b BuiltinRenderer) TemplateDir() string {
+func (b Renderer) TemplateDir() string {
 	dir := internal.ResourcesDir + "/templates"
 	if b.templateDir != "" {
 		dir = b.templateDir
@@ -56,7 +56,7 @@ func (b BuiltinRenderer) TemplateDir() string {
 }
 
 // normalizeViewPath ensures the path is within bounds and ends with .mojito
-func (b BuiltinRenderer) normalizeViewPath(view string) string {
+func (b Renderer) normalizeViewPath(view string) string {
 	path := b.TemplateDir() + view + ".tpl"
 	if strings.HasPrefix(path, b.TemplateDir()) {
 		return path
@@ -64,6 +64,6 @@ func (b BuiltinRenderer) normalizeViewPath(view string) string {
 	return b.TemplateDir()
 }
 
-func NewRenderer() *BuiltinRenderer {
-	return &BuiltinRenderer{}
+func NewRenderer() *Renderer {
+	return &Renderer{}
 }
