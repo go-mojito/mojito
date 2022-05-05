@@ -10,9 +10,6 @@ type Context interface {
 	// Response returns the response object for the current context
 	Response() Response
 
-	// Error returns the error object for the current context
-	Error() error
-
 	/// Assistive functions
 
 	// Response is the mojito implementation of a response which wraps around a regular
@@ -27,4 +24,12 @@ type Context interface {
 
 	// String will write a string to the response body
 	String(body string) error
+}
+
+// ErrorContext contains context for error handlers.
+type ErrorContext interface {
+	Context
+
+	// Error returns the error object for the current context
+	Error() error
 }

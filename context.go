@@ -10,6 +10,11 @@ type Context interface {
 	router.Context
 }
 
+// ErrorContext contains for error handlers.
+type ErrorContext interface {
+	router.ErrorContext
+}
+
 // RendererContext contains context for renderer based functionality.
 type RendererContext interface {
 	Context

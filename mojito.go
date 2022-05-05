@@ -27,6 +27,12 @@ func init() {
 	router.RegisterHandlerArgFactory[Context](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
 		return reflect.ValueOf(ctx)
 	})
+	router.RegisterHandlerArgFactory[ErrorContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
+		if errCtx, ok := ctx.(ErrorContext); ok {
+			return reflect.ValueOf(errCtx)
+		}
+		return reflect.ValueOf(router.NewErrorContext(ctx, nil))
+	})
 	router.RegisterHandlerArgFactory[RendererContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
 		return reflect.ValueOf(NewRenderContext(ctx))
 	})

@@ -14,11 +14,6 @@ type builtinContext struct {
 	metadata structures.Map[string, interface{}]
 }
 
-// Error implements Context
-func (ctx *builtinContext) Error() error {
-	panic("unimplemented")
-}
-
 // Request implements Context
 func (ctx *builtinContext) Request() Request {
 	return ctx.request
