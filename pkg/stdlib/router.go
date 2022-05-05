@@ -161,7 +161,6 @@ func withMojitoHandler(handler router.Handler) http.HandlerFunc {
 }
 
 func withMojitoHandlerError(handler router.Handler) func(http.ResponseWriter, *http.Request, interface{}) {
-	fmt.Print("test 1")
 	return func(res http.ResponseWriter, req *http.Request, rec interface{}) {
 		ctx := router.NewContextFromStdlib(res, req)
 		err := router.NewErrorContext(ctx, fmt.Errorf("%v", rec))
