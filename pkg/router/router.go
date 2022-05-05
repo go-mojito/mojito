@@ -6,4 +6,18 @@ type Router interface {
 	WithGroup(prefix string, callback func(group Group)) error
 	// WithRoute will add a new route with the given RouteMethod to the router
 	WithRoute(method string, path string, handler interface{}) error
+
+	// WithNotFound will set the not found handler for the router
+	WithNotFound(handler interface{}) error
+	// WithNotAllowed will set the not allowed handler for the router
+	WithNotAllowed(handler interface{}) error
+	// WithErrorHandler will set the error handler for the router
+	WithErrorHandler(handler interface{}) error
+	// WithMiddleware will add a middleware to the router
+	WithMiddleware(handler interface{}) error
+
+	// ListenAndServe will start an HTTP webserver on the given address
+	ListenAndServe(address string) error
+	// Shutdown will gracefully shutdown the router
+	Shutdown() error
 }

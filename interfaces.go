@@ -57,16 +57,4 @@ type Router interface {
 	TRACE(path string, handler interface{}) error
 	// PATCH will add a route to this router for the patch method
 	PATCH(path string, handler interface{}) error
-
-	// WithDefaultHandler will set the default handler for the router
-	WithDefaultHandler(handler interface{}) error
-	// WithErrorHandler will set the error handler for the router
-	WithErrorHandler(handler interface{}) error
-	// WithMiddleware will add a middleware to the router
-	WithMiddleware(handler interface{}) error
-
-	// ListenAndServe will start an HTTP webserver on the given address
-	ListenAndServe(address string) error
-	// Shutdown will gracefully shutdown the router
-	Shutdown() error
 }

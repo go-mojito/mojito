@@ -20,9 +20,9 @@ func init() {
 	injector.Singleton(func() Renderer {
 		return stdlib.NewRenderer()
 	})
-	/*injector.Singleton(func() Router {
+	injector.Singleton(func() Router {
 		return stdlib.NewRouter()
-	})*/
+	})
 
 	router.RegisterHandlerArgFactory[Context](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
 		return reflect.ValueOf(ctx)
@@ -159,9 +159,14 @@ func WithGroup(prefix string, callback func(group router.Group)) error {
 	return DefaultRouter().WithGroup(prefix, callback)
 }
 
-// WithDefaultHandler will add a default handler to the default router
-func WithDefaultHandler(handler interface{}) error {
-	return DefaultRouter().WithDefaultHandler(handler)
+// WithNotFound will set the not found handler for the default router
+func WithNotFound(handler interface{}) error {
+	return DefaultRouter().WithNotFound(handler)
+}
+
+// WithNotAllowed will set the not allowed handler for the default router
+func WithNotAllowed(handler interface{}) error {
+	return DefaultRouter().WithNotAllowed(handler)
 }
 
 // WithErrorHandler will add a error handler to the default router
