@@ -1,6 +1,9 @@
 package router
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+)
 
 type builtinGroupRoute struct {
 	handler interface{}
@@ -87,6 +90,9 @@ func (g *builtinGroup) ApplyToRouter(router Router, prefix string) error {
 			if err != nil {
 				return err
 			}
+		}
+		if strings.HasSuffix(prefix, "/") {
+			route.path = strings.TrimLeft(route.path, "/")
 		}
 		if err := router.WithRoute(route.method, prefix+route.path, h); err != nil {
 			return err
