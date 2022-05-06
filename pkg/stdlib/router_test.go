@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"testing"
 	"time"
 
@@ -18,6 +19,7 @@ const (
 	expectedStatus  = "Expected status code %d, got '%d'"
 	expectedBody    = "Expected body 'OK', got '%s'"
 	helloWorld      = "Hello World"
+	benchmarkPath   = "/benchy"
 )
 
 func startServerTest(t *testing.T, r *Router) {
@@ -348,7 +350,7 @@ func Benchmark_Router_Handler_Not_Found(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		request("GET", "/dsfsdfa")
+		request("GET", benchmarkPath)
 	}
 	b.StopTimer()
 }
@@ -369,33 +371,19 @@ func Benchmark_Router_Handler_With_Middleware_1(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		request("GET", "/dsfsdfa")
+		request("GET", benchmarkPath)
 	}
 	b.StopTimer()
 }
 
 func Benchmark_Router_Handler_With_Middleware_5(b *testing.B) {
 	r := NewRouter()
-	r.WithMiddleware(func(ctx router.Context, next func() error) error {
-		ctx.Metadata().Add("foo1", "bar")
-		return next()
-	})
-	r.WithMiddleware(func(ctx router.Context, next func() error) error {
-		ctx.Metadata().Add("foo2", "bar")
-		return next()
-	})
-	r.WithMiddleware(func(ctx router.Context, next func() error) error {
-		ctx.Metadata().Add("foo3", "bar")
-		return next()
-	})
-	r.WithMiddleware(func(ctx router.Context, next func() error) error {
-		ctx.Metadata().Add("foo4", "bar")
-		return next()
-	})
-	r.WithMiddleware(func(ctx router.Context, next func() error) error {
-		ctx.Metadata().Add("foo5", "bar")
-		return next()
-	})
+	for i := 1; i == 5; i++ {
+		r.WithMiddleware(func(ctx router.Context, next func() error) error {
+			ctx.Metadata().Add("foo"+strconv.Itoa(i), "bar")
+			return next()
+		})
+	}
 	r.GET("/", func(ctx router.Context) error {
 		ctx.String(helloWorld)
 		return nil
@@ -406,7 +394,7 @@ func Benchmark_Router_Handler_With_Middleware_5(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		request("GET", "/dsfsdfa")
+		request("GET", benchmarkPath)
 	}
 	b.StopTimer()
 }
