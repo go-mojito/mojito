@@ -94,8 +94,8 @@ func (r *Router) WithRoute(method string, path string, handler interface{}) erro
 	return nil
 }
 
-// WithNotFound will set the not found handler for the router
-func (r *Router) WithNotFound(handler interface{}) error {
+// WithNotFoundHandler will set the not found handler for the router
+func (r *Router) WithNotFoundHandler(handler interface{}) error {
 	if h, err := router.GetOrCreateHandler(handler); err != nil {
 		return err
 	} else {
@@ -104,8 +104,8 @@ func (r *Router) WithNotFound(handler interface{}) error {
 	return nil
 }
 
-// WithNotAllowed will set the not allowed handler for the router
-func (r *Router) WithNotAllowed(handler interface{}) error {
+// WithMethodNotAllowedHandler will set the not allowed handler for the router
+func (r *Router) WithMethodNotAllowedHandler(handler interface{}) error {
 	if h, err := router.GetOrCreateHandler(handler); err != nil {
 		return err
 	} else {

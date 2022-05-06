@@ -159,14 +159,14 @@ func WithGroup(prefix string, callback func(group router.Group)) error {
 	return DefaultRouter().WithGroup(prefix, callback)
 }
 
-// WithNotFound will set the not found handler for the default router
-func WithNotFound(handler interface{}) error {
-	return DefaultRouter().WithNotFound(handler)
+// WithNotFoundHandler will set the not found handler for the default router
+func WithNotFoundHandler(handler interface{}) error {
+	return DefaultRouter().WithNotFoundHandler(handler)
 }
 
-// WithNotAllowed will set the not allowed handler for the default router
-func WithNotAllowed(handler interface{}) error {
-	return DefaultRouter().WithNotAllowed(handler)
+// WithMethodNotAllowedHandler will set the not allowed handler for the default router
+func WithMethodNotAllowedHandler(handler interface{}) error {
+	return DefaultRouter().WithMethodNotAllowedHandler(handler)
 }
 
 // WithErrorHandler will add a error handler to the default router

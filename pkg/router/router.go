@@ -8,9 +8,9 @@ type Router interface {
 	WithRoute(method string, path string, handler interface{}) error
 
 	// WithNotFound will set the not found handler for the router
-	WithNotFound(handler interface{}) error
-	// WithNotAllowed will set the not allowed handler for the router
-	WithNotAllowed(handler interface{}) error
+	WithNotFoundHandler(handler interface{}) error
+	// WithMethodNotAllowedHandler will set the not allowed handler for the router
+	WithMethodNotAllowedHandler(handler interface{}) error
 	// WithErrorHandler will set the error handler for the router
 	WithErrorHandler(handler interface{}) error
 	// WithMiddleware will add a middleware to the router
