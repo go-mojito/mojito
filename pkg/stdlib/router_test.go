@@ -31,8 +31,8 @@ func startServerTest(t *testing.T, r *Router) {
 
 func startServerBench(b *testing.B, r *Router) {
 	go func() {
-		if err := r.ListenAndServe(":8080"); err != nil {
-			b.Errorf(expectedNoError, err)
+		if err := r.ListenAndServe(":8080"); err != nil && err != http.ErrServerClosed {
+			t.Errorf(expectedNoError, err)
 		}
 	}()
 	time.Sleep(waitTime)
