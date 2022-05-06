@@ -1,0 +1,17 @@
+name: Security
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Run Gosec
+        uses: securego/gosec@master
+        with:
+          args: -exclude-dir=internal/*/ ./...

@@ -1,0 +1,34 @@
+name: CodeQL
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  analyse:
+    name: Analyse
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: CodeQL Init
+        uses: github/codeql-action/init@v2
+        with:
+          languages: go
+      - name: Cache go mod
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: CodeQL Autobuild
+        uses: github/codeql-action/autobuild@v2
+      - name: CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
