@@ -17,7 +17,7 @@ func (r builtinRequest) GetRequest() *http.Request {
 }
 
 // Request replaces the underlying http.Request object
-func (r builtinRequest) SetRequest(req *http.Request) {
+func (r *builtinRequest) SetRequest(req *http.Request) {
 	r.request = req
 }
 
@@ -39,7 +39,7 @@ func (r builtinRequest) ParamOrDefault(name string, def string) string {
 	return def
 }
 
-func (r builtinRequest) SetParams(params map[string]string) {
+func (r *builtinRequest) SetParams(params map[string]string) {
 	r.Params = params
 }
 

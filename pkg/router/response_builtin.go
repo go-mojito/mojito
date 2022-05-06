@@ -18,7 +18,7 @@ func (r builtinResponse) GetWriter() http.ResponseWriter {
 }
 
 // SetResponseWriter replaces the underlying response writer instance
-func (r builtinResponse) SetWriter(res http.ResponseWriter) {
+func (r *builtinResponse) SetWriter(res http.ResponseWriter) {
 	r.ResponseWriter = res
 }
 
