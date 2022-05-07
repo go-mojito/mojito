@@ -32,8 +32,9 @@ func Assets(ctx mojito.Context) error {
 		return errors.New("assets path is not a directory, cannot serve assets from path %s")
 	}
 
-	ctx.Request().GetRequest().URL.Path = "/" + ctx.Request().Param("path")
-	http.FileServer(http.Dir(fsPath)).ServeHTTP(ctx.Response(), ctx.Request().GetRequest())
+	fileHandlerRequest := ctx.Request().GetRequest().Clone(ctx.Request().GetRequest().Context())
+	fileHandlerRequest.URL.Path = "/" + ctx.Request().Param("path")
+	http.FileServer(http.Dir(fsPath)).ServeHTTP(ctx.Response(), fileHandlerRequest)
 	return nil
 }
 
