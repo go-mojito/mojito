@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/go-mojito/mojito/pkg/logger"
 )
@@ -98,10 +99,11 @@ func (z *Logger) Warnf(msg string, values ...interface{}) {
 func (z *Logger) log(msg interface{}, level string) {
 	fields := ""
 	for name, val := range z.fields {
-		fields += fmt.Sprintf("%s='%s' ", name, fmt.Sprint(val))
+		sanitizedVal := strings.ReplaceAll(fmt.Sprint(val), "\n", "")
+		sanitizedVal = strings.ReplaceAll(sanitizedVal, "\r", "")
+		fields += fmt.Sprintf("%s='%s' ", name, sanitizedVal)
 	}
-	fields += fmt.Sprint(msg)
-	log.Printf("[%s] %s", level, fields)
+	log.Printf("[%s] %s %s", level, fields, fmt.Sprint(msg))
 }
 
 // newBuiltinLogger will create a new instance of the mojito builtin logger implementation
