@@ -1,7 +1,9 @@
 package router
 
 import (
+	"mime"
 	"net/http"
+	"strings"
 )
 
 // builtinRequest is the mojito implementation of a request which wraps around a
@@ -41,6 +43,26 @@ func (r builtinRequest) ParamOrDefault(name string, def string) string {
 
 func (r *builtinRequest) SetParams(params map[string]string) {
 	r.Params = params
+}
+
+/// Util Functions
+
+// HasContentType determines whether a request has a given mime type as its content type
+func (r builtinRequest) HasContentType(mimetype string) bool {
+	contentType := r.request.Header.Get("Content-Type")
+	if contentType == "" {
+		return mimetype == "application/octet-stream"
+	}
+	for _, v := range strings.Split(contentType, ",") {
+		t, _, err := mime.ParseMediaType(v)
+		if err != nil {
+			break
+		}
+		if t == mimetype {
+			return true
+		}
+	}
+	return false
 }
 
 // NewRequest will create a new instance of a mojito request for the given http.Request object

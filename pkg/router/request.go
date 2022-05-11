@@ -19,4 +19,9 @@ type Request interface {
 
 	// SetParams will set the routep params for this request
 	SetParams(params map[string]string)
+
+	/// Util Functions
+
+	// HasContentType determines whether a request has a given mime type as its content type
+	HasContentType(mimetype string) bool
 }
