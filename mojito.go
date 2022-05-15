@@ -8,6 +8,7 @@ import (
 	"github.com/go-mojito/mojito/pkg/router"
 	"github.com/go-mojito/mojito/pkg/stdlib"
 	"github.com/infinytum/injector"
+	"golang.org/x/net/websocket"
 )
 
 func init() {
@@ -35,6 +36,16 @@ func init() {
 	})
 	router.RegisterHandlerArgFactory[RendererContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
 		return reflect.ValueOf(NewRenderContext(ctx))
+	})
+	router.RegisterHandlerArgFactory[WebSocketContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
+		c := make(chan *websocket.Conn)
+		// Sadly the websocket package does not expose a way to make websocket.Conn objects
+		// Thats why this ugly hack is needed to get a connection object.
+		go websocket.Handler(func(conn *websocket.Conn) {
+			c <- conn
+			<-ctx.CompletedChan()
+		}).ServeHTTP(ctx.Response().GetWriter(), ctx.Request().GetRequest())
+		return reflect.ValueOf(NewWebsocketContext(ctx, <-c))
 	})
 }
 

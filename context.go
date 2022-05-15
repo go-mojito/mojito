@@ -29,3 +29,11 @@ type RendererContext interface {
 	// ViewBag
 	ViewBag() renderer.ViewBag
 }
+
+// WebSocketContext contains context for websocket functionality.
+type WebSocketContext interface {
+	Context
+	Closed() bool
+	Receive(out interface{}) error
+	Send(data interface{}) error
+}
