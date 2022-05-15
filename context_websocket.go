@@ -28,6 +28,9 @@ func (ctx *builtinWebSocketContext) EnableReadCheck() {
 				ctx.closed = true
 				return
 			}
+			if ctx.closed {
+				return
+			}
 		}
 	}()
 }
@@ -71,15 +74,5 @@ func NewWebsocketContext(ctx router.Context, conn *websocket.Conn) WebSocketCont
 		Context: ctx,
 		conn:    conn,
 	}
-
-	// Function that will ensure the closed status is set when the connection is closed by the client
-	go func() {
-		for {
-			if _, err := conn.Read(make([]byte, 0)); err != nil && err.Error() == "EOF" && !ctx2.closed {
-				ctx2.closed = true
-				return
-			}
-		}
-	}()
 	return ctx2
 }
