@@ -24,7 +24,7 @@ func (ctx *builtinWebSocketContext) Closed() bool {
 func (ctx *builtinWebSocketContext) EnableReadCheck() {
 	go func() {
 		for {
-			if _, err := ctx.conn.Read(make([]byte, 0)); err != nil && err.Error() == "EOF" && !ctx.closed {
+			if _, err := ctx.conn.Read(make([]byte, 1)); err != nil && err.Error() == "EOF" && !ctx.closed {
 				ctx.closed = true
 				return
 			}
