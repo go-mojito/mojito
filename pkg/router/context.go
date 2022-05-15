@@ -27,6 +27,7 @@ type Context interface {
 
 	complete()
 	Completed() bool
+	CompletedChan() chan bool
 }
 
 // ErrorContext contains context for error handlers.
