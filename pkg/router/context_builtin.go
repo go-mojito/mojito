@@ -11,6 +11,8 @@ type builtinContext struct {
 	request  Request
 	response Response
 
+	completed bool
+
 	metadata structures.Map[string, interface{}]
 }
 
@@ -57,6 +59,14 @@ func (ctx *builtinContext) Metadata() structures.Map[string, interface{}] {
 func (ctx *builtinContext) String(body string) error {
 	_, err := ctx.response.Write([]byte(body))
 	return err
+}
+
+func (ctx *builtinContext) complete() {
+	ctx.completed = true
+}
+
+func (ctx *builtinContext) Completed() bool {
+	return ctx.completed
 }
 
 func NewContextFromStdlib(w http.ResponseWriter, req *http.Request) *builtinContext {

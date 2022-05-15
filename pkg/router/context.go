@@ -24,6 +24,9 @@ type Context interface {
 
 	// String will write a string to the response body
 	String(body string) error
+
+	complete()
+	Completed() bool
 }
 
 // ErrorContext contains context for error handlers.
