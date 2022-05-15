@@ -34,6 +34,7 @@ type RendererContext interface {
 type WebSocketContext interface {
 	Context
 	Closed() bool
+	EnableReadCheck()
 	Receive(out interface{}) error
 	Send(data interface{}) error
 }

@@ -18,6 +18,20 @@ func (ctx *builtinWebSocketContext) Closed() bool {
 	return ctx.closed
 }
 
+// EnableReadCheck will enable a function that will ensure the closed status is set when the connection is closed by the client
+// by continuously attempting to read on the channel. This is helpful for when you are only interested in sending on your socket.
+// DO NOT ENABLE THIS WHEN YOU WANT TO READ, YOU WILL LOOSE INCOMING DATA!
+func (ctx *builtinWebSocketContext) EnableReadCheck() {
+	go func() {
+		for {
+			if _, err := ctx.conn.Read(make([]byte, 0)); err != nil && err.Error() == "EOF" && !ctx.closed {
+				ctx.closed = true
+				return
+			}
+		}
+	}()
+}
+
 func (ctx *builtinWebSocketContext) Receive(out interface{}) (err error) {
 	outType := reflect.TypeOf(out)
 	for outType != nil && outType.Kind() == reflect.Pointer {
