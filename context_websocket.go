@@ -70,9 +70,8 @@ func (ctx *builtinWebSocketContext) Send(data interface{}) (err error) {
 }
 
 func NewWebsocketContext(ctx router.Context, conn *websocket.Conn) WebSocketContext {
-	ctx2 := &builtinWebSocketContext{
+	return &builtinWebSocketContext{
 		Context: ctx,
 		conn:    conn,
 	}
-	return ctx2
 }

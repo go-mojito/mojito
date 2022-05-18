@@ -84,5 +84,6 @@ func NewContext(req Request, res Response) *builtinContext {
 		request:       req,
 		response:      res,
 		completedChan: make(chan bool),
+		metadata:      structures.NewMap[string, interface{}](),
 	}
 }
