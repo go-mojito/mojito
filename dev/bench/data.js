@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1652913128536,
+  "lastUpdate": 1654354670557,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -2112,6 +2112,150 @@ window.BENCHMARK_DATA = {
             "value": 12986508,
             "unit": "ns/op\t   23716 B/op\t     190 allocs/op",
             "extra": "92 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "43315617+nilathedragon@users.noreply.github.com",
+            "name": "Nila",
+            "username": "nilathedragon"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "711f1fc0e4bd3da9eb5e39c2118ee13a85e5eac3",
+          "message": "Add helper package for easier web socket usage (#2)\n\n* Allow structs to be used as a handler if they provide a function to create a handler func\r\n\r\n* Websocket Channel Helper\r\n\r\n* Add logging for errors that cannot be handled\r\n\r\n* Renamed ws.go file",
+          "timestamp": "2022-06-04T16:56:28+02:00",
+          "tree_id": "e983338a5844517221fa25d52237e3b4ecdc92e5",
+          "url": "https://github.com/go-mojito/mojito/commit/711f1fc0e4bd3da9eb5e39c2118ee13a85e5eac3"
+        },
+        "date": 1654354669577,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 227837,
+            "unit": "ns/op\t   23984 B/op\t     179 allocs/op",
+            "extra": "4520 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 237697,
+            "unit": "ns/op\t   28956 B/op\t     182 allocs/op",
+            "extra": "5400 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 1404533,
+            "unit": "ns/op\t   28966 B/op\t     181 allocs/op",
+            "extra": "5294 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 1745983,
+            "unit": "ns/op\t   26845 B/op\t     179 allocs/op",
+            "extra": "672 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 1792576,
+            "unit": "ns/op\t   26824 B/op\t     179 allocs/op",
+            "extra": "661 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 1806345,
+            "unit": "ns/op\t   27255 B/op\t     176 allocs/op",
+            "extra": "644 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 1839443,
+            "unit": "ns/op\t   28169 B/op\t     178 allocs/op",
+            "extra": "646 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 1871421,
+            "unit": "ns/op\t   28897 B/op\t     178 allocs/op",
+            "extra": "636 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 1902998,
+            "unit": "ns/op\t   28170 B/op\t     178 allocs/op",
+            "extra": "620 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 1914853,
+            "unit": "ns/op\t   28184 B/op\t     178 allocs/op",
+            "extra": "621 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1955535,
+            "unit": "ns/op\t   28148 B/op\t     178 allocs/op",
+            "extra": "608 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1975917,
+            "unit": "ns/op\t   28142 B/op\t     178 allocs/op",
+            "extra": "602 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1990667,
+            "unit": "ns/op\t   28136 B/op\t     178 allocs/op",
+            "extra": "597 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1996025,
+            "unit": "ns/op\t   28113 B/op\t     178 allocs/op",
+            "extra": "588 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 2040207,
+            "unit": "ns/op\t   30247 B/op\t     178 allocs/op",
+            "extra": "579 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 2053443,
+            "unit": "ns/op\t   29041 B/op\t     178 allocs/op",
+            "extra": "574 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 4719143,
+            "unit": "ns/op\t   28235 B/op\t     182 allocs/op",
+            "extra": "552 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 12234367,
+            "unit": "ns/op\t   23084 B/op\t     188 allocs/op",
+            "extra": "98 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 12288034,
+            "unit": "ns/op\t   23956 B/op\t     190 allocs/op",
+            "extra": "97 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 12409469,
+            "unit": "ns/op\t   23860 B/op\t     190 allocs/op",
+            "extra": "97 times\n2 procs"
           }
         ]
       }
