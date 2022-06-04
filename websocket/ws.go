@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/go-mojito/mojito"
+	"github.com/go-mojito/mojito/log"
 	"github.com/go-mojito/mojito/pkg/router"
 	"github.com/infinytum/structures"
 )
@@ -33,13 +34,13 @@ func (ws *WebSocket) WithChannel(name string, handler interface{}) *WebSocket {
 	if err != nil {
 		panic(err)
 	}
-	ws.channels.Set(name, func(ctx mojito.WebSocketContext, handlerCtx router.Context) {
-		if err := h.HandlerFunc()(handlerCtx); err != nil {
-			ctx.Send(Message{
-				Error: err.Error(),
-			})
-		}
-	})
+	if err := ws.channels.Set(name, func(ctx mojito.WebSocketContext, handlerCtx router.Context) {
+		callHandler(h, ctx, handlerCtx)
+	}); err != nil {
+		log.
+			Field("state", "with_channel").
+			Error(err)
+	}
 	return ws
 }
 
@@ -48,15 +49,13 @@ func (ws *WebSocket) WithAsyncChannel(name string, handler interface{}) *WebSock
 	if err != nil {
 		panic(err)
 	}
-	ws.channels.Set(name, func(ctx mojito.WebSocketContext, handlerCtx router.Context) {
-		go func() {
-			if err := h.HandlerFunc()(handlerCtx); err != nil {
-				ctx.Send(Message{
-					Error: err.Error(),
-				})
-			}
-		}()
-	})
+	if err := ws.channels.Set(name, func(ctx mojito.WebSocketContext, handlerCtx router.Context) {
+		go callHandler(h, ctx, handlerCtx)
+	}); err != nil {
+		log.
+			Field("state", "with_async_channel").
+			Error(err)
+	}
 	return ws
 }
 
@@ -65,9 +64,14 @@ func (ws *WebSocket) ToHandler() interface{} {
 		for !ctx.Closed() {
 			var message Message
 			if err := ctx.Receive(&message); err != nil {
-				ctx.Send(Message{
+				if err := ctx.Send(Message{
 					Error: err.Error(),
-				})
+				}); err != nil {
+					log.
+						Field("remote", ctx.Request().GetRequest().RemoteAddr).
+						Field("state", "receiving").
+						Error(err)
+				}
 				continue
 			}
 
@@ -78,26 +82,51 @@ func (ws *WebSocket) ToHandler() interface{} {
 			}
 
 			if message.Channel == nil || !ws.channels.Contains(*message.Channel) {
+				var sendErr error
 				if ws.catchAll == nil {
-					ctx.Send(Message{
+					sendErr = ctx.Send(Message{
 						Error: "this channel does not exist",
 					})
 				} else if err := ws.catchAll.HandlerFunc()(channelCtx); err != nil {
-					ctx.Send(Message{
+					sendErr = ctx.Send(Message{
 						Error: err.Error(),
 					})
+				}
+				if sendErr != nil {
+					log.
+						Field("remote", ctx.Request().GetRequest().RemoteAddr).
+						Field("state", "sending").
+						Error(sendErr)
 				}
 				continue
 			}
 
 			channel, err := ws.channels.Get(*message.Channel)
 			if err != nil {
-				ctx.Send(Message{
+				if err := ctx.Send(Message{
 					Error: err.Error(),
-				})
+				}); err != nil {
+					log.
+						Field("remote", ctx.Request().GetRequest().RemoteAddr).
+						Field("state", "sending").
+						Error(err)
+				}
 				continue
 			}
 			channel(ctx, channelCtx)
+		}
+	}
+}
+
+func callHandler(h router.Handler, ctx mojito.WebSocketContext, handlerCtx router.Context) {
+	if err := h.HandlerFunc()(handlerCtx); err != nil {
+		if err := ctx.Send(Message{
+			Error: err.Error(),
+		}); err != nil {
+			log.
+				Field("remote", ctx.Request().GetRequest().RemoteAddr).
+				Field("state", "sending").
+				Error(err)
 		}
 	}
 }
