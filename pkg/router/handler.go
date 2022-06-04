@@ -30,6 +30,11 @@ type Handler interface {
 	Value() reflect.Value
 }
 
+// Handleable defines the interface for a structure that can be used to create a handler
+type Handleable interface {
+	ToHandler() interface{}
+}
+
 // HandlerChain will chain a handler func and a middleware together to form a new, single handler func
 func HandlerChain(f HandlerFunc, middleware MiddlewareHandlerFunc) HandlerFunc {
 	return func(ctx Context) error {

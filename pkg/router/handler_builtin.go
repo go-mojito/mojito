@@ -13,6 +13,8 @@ var (
 	ErrorNotAHandler = errors.New("Given handler value is not of the type router.Handler")
 	// handlerInterface is the golang type reflection of a router handler
 	handlerInterface = reflect.TypeOf((*Handler)(nil)).Elem()
+	// handlerablenterface is the golang type reflection of a handleable
+	handlerablenterface = reflect.TypeOf((*Handleable)(nil)).Elem()
 )
 
 // Handler defines a router handler
@@ -82,7 +84,6 @@ func (h builtinHandler) Serve(ctx Context) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("%v: %s", e, string(debug.Stack()))
-
 		}
 		ctx.complete()
 	}()
@@ -101,6 +102,10 @@ func GetHandler(handler interface{}) (Handler, error) {
 	if reflectType.AssignableTo(handlerInterface) {
 		h := handler.(Handler)
 		return h, nil
+	}
+	if reflectType.AssignableTo(handlerablenterface) {
+		h := handler.(Handleable)
+		return NewHandler(h.ToHandler())
 	}
 	return nil, ErrorNotAHandler
 }
