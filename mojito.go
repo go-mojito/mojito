@@ -41,10 +41,13 @@ func init() {
 		c := make(chan *websocket.Conn)
 		// Sadly the websocket package does not expose a way to make websocket.Conn objects
 		// Thats why this ugly hack is needed to get a connection object.
-		go websocket.Handler(func(conn *websocket.Conn) {
-			c <- conn
-			<-ctx.CompletedChan()
-		}).ServeHTTP(ctx.Response().GetWriter(), ctx.Request().GetRequest())
+		s := websocket.Server{
+			Handler: websocket.Handler(func(conn *websocket.Conn) {
+				c <- conn
+				<-ctx.CompletedChan()
+			}),
+		}
+		go s.ServeHTTP(ctx.Response().GetWriter(), ctx.Request().GetRequest())
 		return reflect.ValueOf(NewWebsocketContext(ctx, <-c))
 	})
 }
