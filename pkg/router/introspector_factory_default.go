@@ -26,14 +26,14 @@ func newNextFuncFactory(ctx Context, next HandlerFunc) reflect.Value {
 // newDefaultHandlerArgFactory will create a fake factory that attempts to dependency inject the argument.
 func newDefaultHandlerArgFactory(forType reflect.Type) (HandlerIntrospectorArgFactory, error) {
 	isPointer := false
-	if forType.Kind() == reflect.Pointer {
-		forType = forType.Elem()
+	if _, resolveErr := injector.InjectT(forType); resolveErr != nil && forType.Kind() == reflect.Pointer {
 		isPointer = true
+		forType = forType.Elem()
 	}
 
 	ctx := reflect.New(forType).Interface()
 
-	if forType.Kind() == reflect.Struct {
+	if forType.Kind() == reflect.Struct || forType.Kind() == reflect.Pointer {
 		// First test if its a struct dependency
 		if err := injector.InjectInto(ctx); err != nil {
 			// If not, structs are usually Context objects that hold one or multiple fields
