@@ -12,18 +12,29 @@ import (
 )
 
 func init() {
-	injector.Singleton(func() Cache {
+	if err := injector.Singleton(func() Cache {
 		return stdlib.NewCache()
-	})
-	injector.Singleton(func() Logger {
+	}); err != nil {
+		fmt.Println("Cannot register default cache dependency: ", err)
+	}
+
+	if err := injector.Singleton(func() Logger {
 		return stdlib.NewLogger()
-	})
-	injector.Singleton(func() Renderer {
+	}); err != nil {
+		fmt.Println("Cannot register default logger dependency: ", err)
+	}
+
+	if err := injector.Singleton(func() Renderer {
 		return stdlib.NewRenderer()
-	})
-	injector.Singleton(func() Router {
+	}); err != nil {
+		fmt.Println("Cannot register default renderer dependency: ", err)
+	}
+
+	if err := injector.Singleton(func() Router {
 		return stdlib.NewRouter()
-	})
+	}); err != nil {
+		fmt.Println("Cannot register default router dependency: ", err)
+	}
 
 	router.RegisterHandlerArgFactory[Context](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
 		return reflect.ValueOf(ctx)

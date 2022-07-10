@@ -3,6 +3,7 @@ package stdlib
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-mojito/mojito/pkg/router"
 	"github.com/julienschmidt/httprouter"
@@ -138,8 +139,9 @@ func (r *Router) WithMiddleware(handler interface{}) error {
 // ListenAndServe will start an HTTP webserver on the given address
 func (r *Router) ListenAndServe(address string) error {
 	r.Server = &http.Server{
-		Addr:    address,
-		Handler: r.Router,
+		Addr:              address,
+		Handler:           r.Router,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 	return r.Server.ListenAndServe()
 }
