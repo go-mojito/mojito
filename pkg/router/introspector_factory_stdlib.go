@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 	"reflect"
 )
@@ -24,6 +25,8 @@ func stdlibHandlerFactory(ctx Context, next HandlerFunc) reflect.Value {
 	return reflect.ValueOf(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx.Response().SetWriter(w)
 		ctx.Request().SetRequest(r)
-		next(ctx)
+		if err := next(ctx); err != nil {
+			fmt.Printf("stdlib handler failed: %s", err)
+		}
 	}))
 }
