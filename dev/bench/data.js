@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657991384481,
+  "lastUpdate": 1657996303206,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3408,6 +3408,54 @@ window.BENCHMARK_DATA = {
             "value": 2596727,
             "unit": "ns/op\t   22860 B/op\t     175 allocs/op",
             "extra": "428 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e85101babab13a985178861184858110c153b74",
+          "message": "test(bench): Only run once (#11)",
+          "timestamp": "2022-07-16T20:31:03+02:00",
+          "tree_id": "c4cfc33a951ad44d26bbc12403a53942cd55573b",
+          "url": "https://github.com/go-mojito/mojito/commit/5e85101babab13a985178861184858110c153b74"
+        },
+        "date": 1657996302423,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 306802,
+            "unit": "ns/op\t   22929 B/op\t     178 allocs/op",
+            "extra": "3421 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 286168,
+            "unit": "ns/op\t   29415 B/op\t     178 allocs/op",
+            "extra": "3547 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1858391,
+            "unit": "ns/op\t   21365 B/op\t     174 allocs/op",
+            "extra": "4174 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 2528311,
+            "unit": "ns/op\t   26730 B/op\t     175 allocs/op",
+            "extra": "457 times\n2 procs"
           }
         ]
       }
