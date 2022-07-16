@@ -1,0 +1,47 @@
+name: "Feature Request"
+title: "[Enhancement]: "
+description: Suggest an idea or enhancement to improve this project.
+labels: ["enhancement"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "A clear and concise description of the feature you want to see and why you think it should be added to Mojito."
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "Additional Context"
+      description: "If you have something else to describe, write them here."
+  - type: textarea
+    id: snippet
+    attributes:
+      label: "Code Snippet"
+      description: "Code snippet may be really helpful to describe some features."
+      render: go
+      value: |
+        package main
+
+        import "github.com/go-mojito/mojito"
+
+        func main() {
+          mojito.GET("/", func(ctx mojito.Context) {
+            ctx.String("Hello World")
+          })
+          mojito.ListenAndServe(":8123")
+        }
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: "Checklist:"
+      description: "By submitting this issue, you confirm that:"
+      options:
+        - label: "I agree to follow Mojito's [Code of Conduct](../CODE_OF_CONDUCT.md)."
+          required: true
+        - label: "I have checked for existing issues that describe my suggestion prior to opening this one."
+          required: true
+        - label: "I understand that improperly formatted feature requests reports may be closed without explanation."
+          required: true
