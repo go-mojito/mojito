@@ -1,0 +1,68 @@
+name: "Bug Report"
+title: "[Bug]: "
+description: "Let us know about an unexpected error, a crash, or an incorrect behavior."
+labels: ["bug"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "A clear and concise description of what the bug is."
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-reproduce
+    attributes:
+      label: How to Reproduce
+      description: "How can we reproduce the bug."
+      value: |
+          1. Go to '....'
+          2. Click on '....'
+          3. Do '....'
+          4. See '....'
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: "A clear and concise description of what you expected to happen."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: "Version"
+      description: "Some bugs might allready be fixed in newer versions of Mojito, so we need your Mojito version."
+    validations:
+      required: true
+  - type: textarea
+    id: snippet
+    attributes:
+      label: "Code Snippet"
+      description: "In some instances we need to know your code, if the code is small please provide us with a snipped, if the code is to big and can be shared please create a reproducer repository."
+      render: go
+      value: |
+        package main
+
+        import "github.com/go-mojito/mojito"
+
+        func main() {
+          mojito.GET("/", func(ctx mojito.Context) {
+            ctx.String("Hello World")
+          })
+          mojito.ListenAndServe(":8123")
+        }
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: "Checklist:"
+      description: "By submitting this issue, you confirm that:"
+      options:
+        - label: "I agree to follow Mojito's [Code of Conduct](../CODE_OF_CONDUCT.md)."
+          required: true
+        - label: "I have checked for existing issues that describe my problem prior to opening this one."
+          required: true
+        - label: "I understand that improperly formatted bug reports may be closed without explanation."
+          required: true
