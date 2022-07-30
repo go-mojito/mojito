@@ -34,14 +34,14 @@ body:
     id: version
     attributes:
       label: "Version"
-      description: "Some bugs might allready be fixed in newer versions of Mojito, so we need your Mojito version."
+      description: "Some bugs might already be fixed in newer versions of Mojito, so we need your Mojito version."
     validations:
       required: true
   - type: textarea
     id: snippet
     attributes:
       label: "Code Snippet"
-      description: "In some instances we need to know your code, if the code is small please provide us with a snipped, if the code is to big and can be shared please create a reproducer repository."
+      description: "In some instances we need to know your code, if the code is small please provide us with a snippet, if the code is to big and can be shared please create a reproducer repository."
       render: go
       value: |
         package main
