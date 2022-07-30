@@ -15,12 +15,12 @@ body:
     id: additional-context
     attributes:
       label: "Additional Context"
-      description: "If you have something else to describe, write them here."
+      description: "If you have something else to describe, write it here."
   - type: textarea
     id: snippet
     attributes:
       label: "Code Snippet"
-      description: "Code snippet may be really helpful to describe some features."
+      description: "A code snippet may be really helpful to describe some features."
       render: go
       value: |
         package main

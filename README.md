@@ -61,4 +61,5 @@ Mojito is a super-modular, fast, opinion-less framework to bootstrap your next G
 	<a href="https://go-mojito.infinytum.co/docs">Documentation</a>, check out the 
 	<a href="https://go-mojito.infinytum.co/">Project Website</a>.
 </p>
+
 <p align="center"><sub>Icon made with <a href="https://gopherize.me">Gopherize</a> and <a href="https://www.flaticon.com/free-icon/mojito_920710">flaticon</a>.</sub></p>
