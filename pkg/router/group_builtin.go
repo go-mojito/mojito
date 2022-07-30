@@ -7,12 +7,6 @@ import (
 	"github.com/infinytum/structures"
 )
 
-type builtinGroupRoute struct {
-	handler interface{}
-	method  string
-	path    string
-}
-
 type builtinGroup struct {
 	routes     structures.Table[string, string, interface{}]
 	middleware []interface{}
@@ -73,7 +67,9 @@ func (g *builtinGroup) WithMiddleware(middleware interface{}) {
 
 // WithRoute will add a new route with the given RouteMethod to the route group
 func (g *builtinGroup) WithRoute(method string, path string, handler interface{}) {
-	g.routes.Set(method, path, handler)
+	if err := g.routes.Set(method, path, handler); err != nil {
+		panic(err)
+	}
 }
 
 // ApplyToRouter applies all routes in the route group to a given router
