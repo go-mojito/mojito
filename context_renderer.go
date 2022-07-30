@@ -6,15 +6,14 @@ import (
 
 	"github.com/go-mojito/mojito/pkg/renderer"
 	"github.com/go-mojito/mojito/pkg/router"
-	"github.com/infinytum/structures"
 	"github.com/mitchellh/hashstructure/v2"
 )
 
-var viewCachePrefix = "view_cache_"
+const viewCachePrefix = "view_cache_"
+const viewBagMetadataKey = "mojito.pkg.renderer.ViewBag"
 
 type builtinRenderContext struct {
 	router.Context
-	viewBag renderer.ViewBag
 }
 
 // MustView implements RendererContext
@@ -55,12 +54,15 @@ func (ctx *builtinRenderContext) View(view string) error {
 
 // ViewBag implements RendererContext
 func (ctx *builtinRenderContext) ViewBag() renderer.ViewBag {
-	return ctx.viewBag
+	viewBag, ok := ctx.Context.Metadata().GetOrSet(viewBagMetadataKey, renderer.NewViewBag()).(renderer.ViewBag)
+	if !ok {
+		panic("ViewBag is not a renderer.ViewBag")
+	}
+	return viewBag
 }
 
 func NewRenderContext(ctx router.Context) RendererContext {
 	return &builtinRenderContext{
 		Context: ctx,
-		viewBag: structures.NewMap[string, interface{}](),
 	}
 }
