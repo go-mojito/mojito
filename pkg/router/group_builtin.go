@@ -3,16 +3,12 @@ package router
 import (
 	"net/http"
 	"strings"
+
+	"github.com/infinytum/structures"
 )
 
-type builtinGroupRoute struct {
-	handler interface{}
-	method  string
-	path    string
-}
-
 type builtinGroup struct {
-	routes     map[string]builtinGroupRoute
+	routes     structures.Table[string, string, interface{}]
 	middleware []interface{}
 }
 
@@ -71,31 +67,31 @@ func (g *builtinGroup) WithMiddleware(middleware interface{}) {
 
 // WithRoute will add a new route with the given RouteMethod to the route group
 func (g *builtinGroup) WithRoute(method string, path string, handler interface{}) {
-	g.routes[path] = builtinGroupRoute{
-		handler: handler,
-		method:  method,
-		path:    path,
+	if err := g.routes.Set(method, path, handler); err != nil {
+		panic(err)
 	}
 }
 
 // ApplyToRouter applies all routes in the route group to a given router
 func (g *builtinGroup) ApplyToRouter(router Router, prefix string) error {
-	for _, route := range g.routes {
-		h, err := NewHandler(route.handler)
-		if err != nil {
-			return err
-		}
-		for _, middleware := range g.Middleware() {
-			err := h.AddMiddleware(middleware)
+	for method, routeMap := range g.routes.ToMap() {
+		for path, handler := range routeMap {
+			h, err := NewHandler(handler)
 			if err != nil {
 				return err
 			}
-		}
-		if strings.HasSuffix(prefix, "/") {
-			route.path = strings.TrimLeft(route.path, "/")
-		}
-		if err := router.WithRoute(route.method, prefix+route.path, h); err != nil {
-			return err
+			for _, middleware := range g.Middleware() {
+				err := h.AddMiddleware(middleware)
+				if err != nil {
+					return err
+				}
+			}
+			if strings.HasSuffix(prefix, "/") {
+				path = strings.TrimLeft(path, "/")
+			}
+			if err := router.WithRoute(method, prefix+path, h); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -107,6 +103,6 @@ func (g *builtinGroup) Middleware() []interface{} {
 
 func NewGroup() Group {
 	return &builtinGroup{
-		routes: make(map[string]builtinGroupRoute),
+		routes: structures.NewTable[string, string, interface{}](),
 	}
 }
