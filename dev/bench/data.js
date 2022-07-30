@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657996303206,
+  "lastUpdate": 1659188247021,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3456,6 +3456,54 @@ window.BENCHMARK_DATA = {
             "value": 2528311,
             "unit": "ns/op\t   26730 B/op\t     175 allocs/op",
             "extra": "457 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "43315617+nilathedragon@users.noreply.github.com",
+            "name": "Nila",
+            "username": "nilathedragon"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5b695d3e1c935375bb7b99d8593299b503ee317d",
+          "message": "Store the ViewBag in Metadata to prevent state loss when using RendererContext middleware. (#12)",
+          "timestamp": "2022-07-30T15:36:50+02:00",
+          "tree_id": "55d5df1a532e4da656a3ab7290a14d2231c78a63",
+          "url": "https://github.com/go-mojito/mojito/commit/5b695d3e1c935375bb7b99d8593299b503ee317d"
+        },
+        "date": 1659188246324,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 233639,
+            "unit": "ns/op\t   23565 B/op\t     179 allocs/op",
+            "extra": "4368 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 229117,
+            "unit": "ns/op\t   29418 B/op\t     179 allocs/op",
+            "extra": "5132 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1382471,
+            "unit": "ns/op\t   27398 B/op\t     178 allocs/op",
+            "extra": "5226 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 1809970,
+            "unit": "ns/op\t   27235 B/op\t     176 allocs/op",
+            "extra": "636 times\n2 procs"
           }
         ]
       }
