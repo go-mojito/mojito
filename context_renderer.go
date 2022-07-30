@@ -42,7 +42,7 @@ func (ctx *builtinRenderContext) View(view string) error {
 	if err != nil {
 		return err
 	}
-	if err := cache.Set(viewCacheKey, render); err == nil {
+	if err := cache.Set(viewCacheKey, render); err != nil {
 		return err
 	}
 	if err := cache.ExpireAfter(viewCacheKey, time.Second*5); err != nil {
