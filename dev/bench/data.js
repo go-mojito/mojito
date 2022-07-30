@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659188247021,
+  "lastUpdate": 1659189236922,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3504,6 +3504,54 @@ window.BENCHMARK_DATA = {
             "value": 1809970,
             "unit": "ns/op\t   27235 B/op\t     176 allocs/op",
             "extra": "636 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "43315617+nilathedragon@users.noreply.github.com",
+            "name": "Nila",
+            "username": "nilathedragon"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49b3bea3646472c1e4ecc09ca0d5f040409c4a3d",
+          "message": "Flip error check that causes cache-miss page load to be empty (#13)",
+          "timestamp": "2022-07-30T15:53:19+02:00",
+          "tree_id": "354d6fc287dd00c24f972000d86881bee99c5c18",
+          "url": "https://github.com/go-mojito/mojito/commit/49b3bea3646472c1e4ecc09ca0d5f040409c4a3d"
+        },
+        "date": 1659189235305,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 440456,
+            "unit": "ns/op\t   29154 B/op\t     182 allocs/op",
+            "extra": "2272 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 412808,
+            "unit": "ns/op\t   29432 B/op\t     179 allocs/op",
+            "extra": "3174 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 378234,
+            "unit": "ns/op\t   29321 B/op\t     178 allocs/op",
+            "extra": "3266 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 383529,
+            "unit": "ns/op\t   29163 B/op\t     178 allocs/op",
+            "extra": "2912 times\n2 procs"
           }
         ]
       }
