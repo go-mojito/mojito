@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659189236922,
+  "lastUpdate": 1659223189627,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3552,6 +3552,54 @@ window.BENCHMARK_DATA = {
             "value": 383529,
             "unit": "ns/op\t   29163 B/op\t     178 allocs/op",
             "extra": "2912 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b96625dae3ab036165a6e8867e10dd9886684d75",
+          "message": "docs: Remove typos (#14)",
+          "timestamp": "2022-07-31T01:19:16+02:00",
+          "tree_id": "2594aa72036fd99867ebc4e7b558b89c08ca2140",
+          "url": "https://github.com/go-mojito/mojito/commit/b96625dae3ab036165a6e8867e10dd9886684d75"
+        },
+        "date": 1659223189262,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 270600,
+            "unit": "ns/op\t   23782 B/op\t     179 allocs/op",
+            "extra": "3816 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 264917,
+            "unit": "ns/op\t   29424 B/op\t     179 allocs/op",
+            "extra": "4527 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 897325,
+            "unit": "ns/op\t   29511 B/op\t     178 allocs/op",
+            "extra": "4428 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 2182940,
+            "unit": "ns/op\t   26988 B/op\t     176 allocs/op",
+            "extra": "534 times\n2 procs"
           }
         ]
       }
