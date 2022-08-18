@@ -13,7 +13,7 @@ func stdlibRequestFactory(ctx Context, next HandlerFunc) reflect.Value {
 }
 
 func stdlibResponseFactory(ctx Context, next HandlerFunc) reflect.Value {
-	return reflect.ValueOf(ctx.Response())
+	return reflect.ValueOf(ctx.Response().GetWriter())
 }
 
 func stdlibHandlerFactory(ctx Context, next HandlerFunc) reflect.Value {
