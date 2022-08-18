@@ -50,7 +50,7 @@ func (h *builtinHandler) AddMiddleware(middleware interface{}) error {
 			return returnVal[0].Interface().(error)
 		}
 		if middleHandler.Introspection().IsStdlibMiddleware() {
-			(returnVal[0].Interface().(http.Handler)).ServeHTTP(ctx.Response(), ctx.Request().GetRequest())
+			(returnVal[0].Interface().(http.Handler)).ServeHTTP(ctx.Response().GetWriter(), ctx.Request().GetRequest())
 		}
 		return nil
 	}
