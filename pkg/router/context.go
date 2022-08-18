@@ -22,6 +22,12 @@ type Context interface {
 	// Metadata contains the metadata about the current context
 	Metadata() structures.Map[string, interface{}]
 
+	// ReadJSON reads the request body as JSON and unmarshals it into the given object
+	ReadJSON(obj interface{}) error
+
+	// ReadXML reads the request body as XML and unmarshals it into the given object
+	ReadXML(obj interface{}) error
+
 	// String will write a string to the response body
 	String(body string) error
 
