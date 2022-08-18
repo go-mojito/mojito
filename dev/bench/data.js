@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659225096253,
+  "lastUpdate": 1660851426891,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3648,6 +3648,54 @@ window.BENCHMARK_DATA = {
             "value": 2147797,
             "unit": "ns/op\t   26959 B/op\t     176 allocs/op",
             "extra": "524 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "43315617+nilathedragon@users.noreply.github.com",
+            "name": "Nila",
+            "username": "nilathedragon"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "71fb4e2ecf37cd93dc984ef2dd38f94f6b4e7598",
+          "message": "Add helper methods for reading JSON and XML bodies into an object (#16)",
+          "timestamp": "2022-08-18T21:36:26+02:00",
+          "tree_id": "506d7514b9c9b0c9a7aae3a4204157142e57df8c",
+          "url": "https://github.com/go-mojito/mojito/commit/71fb4e2ecf37cd93dc984ef2dd38f94f6b4e7598"
+        },
+        "date": 1660851426397,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 493414,
+            "unit": "ns/op\t   29137 B/op\t     182 allocs/op",
+            "extra": "2138 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 429483,
+            "unit": "ns/op\t   23779 B/op\t     176 allocs/op",
+            "extra": "2847 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 421357,
+            "unit": "ns/op\t   29228 B/op\t     178 allocs/op",
+            "extra": "2943 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 1655555,
+            "unit": "ns/op\t   23436 B/op\t     176 allocs/op",
+            "extra": "2847 times\n2 procs"
           }
         ]
       }
