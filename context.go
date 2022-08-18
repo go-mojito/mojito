@@ -1,6 +1,8 @@
 package mojito
 
 import (
+	"time"
+
 	"github.com/go-mojito/mojito/pkg/renderer"
 	"github.com/go-mojito/mojito/pkg/router"
 )
@@ -18,6 +20,11 @@ type ErrorContext interface {
 // RendererContext contains context for renderer based functionality.
 type RendererContext interface {
 	Context
+
+	// SetViewCacheTTL sets the duration a rendered view is kept in the cache.
+	// If the duration is 0, the view is cached forever.
+	// If the duration is negative, the view is not cached.
+	SetViewCacheTTL(t time.Duration)
 
 	// View will use the default renderer to load a view and render it
 	// to the response body using the response object's ViewBag
