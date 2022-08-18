@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"net/http"
 
 	"github.com/infinytum/structures"
@@ -54,6 +55,16 @@ func (ctx *builtinContext) PrettyJSON(body interface{}) error {
 // Metadata implements Context
 func (ctx *builtinContext) Metadata() structures.Map[string, interface{}] {
 	return ctx.metadata
+}
+
+// ReadJSON reads the request body as JSON and unmarshals it into the given object
+func (ctx *builtinContext) ReadJSON(obj interface{}) error {
+	return json.NewDecoder(ctx.request.GetRequest().Body).Decode(obj)
+}
+
+// ReadXML reads the request body as XML and unmarshals it into the given object
+func (ctx *builtinContext) ReadXML(obj interface{}) error {
+	return xml.NewDecoder(ctx.request.GetRequest().Body).Decode(obj)
 }
 
 // String will write a string to the response body
