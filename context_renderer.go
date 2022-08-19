@@ -75,7 +75,9 @@ func (ctx *builtinRenderContext) ViewBag() renderer.ViewBag {
 // If the duration is 0, the view is cached forever.
 // If the duration is negative, the view is not cached.
 func (ctx *builtinRenderContext) SetViewCacheTTL(t time.Duration) {
-	ctx.Context.Metadata().Set(viewCacheTTLKey, t)
+	if err := ctx.Context.Metadata().Set(viewCacheTTLKey, t); err != nil {
+		DefaultLogger().Errorf("failed to set view cache ttl: %s", err)
+	}
 }
 
 func NewRenderContext(ctx router.Context) RendererContext {
