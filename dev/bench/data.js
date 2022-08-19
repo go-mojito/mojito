@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660852905495,
+  "lastUpdate": 1660901036656,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3743,6 +3743,54 @@ window.BENCHMARK_DATA = {
             "name": "Benchmark_Router_Handler_With_Middleware_5",
             "value": 1985353,
             "unit": "ns/op\t   27089 B/op\t     176 allocs/op",
+            "extra": "572 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "43315617+nilathedragon@users.noreply.github.com",
+            "name": "Nila",
+            "username": "nilathedragon"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3c7481a46f933ec5a395ceb5519ea479133a8c46",
+          "message": "Use .GetWriter on Response when passing to stdlib implementation (#17)",
+          "timestamp": "2022-08-18T22:01:03+02:00",
+          "tree_id": "cb0d2c5ef46f588d9c4cd276c431d00dca6b7940",
+          "url": "https://github.com/go-mojito/mojito/commit/3c7481a46f933ec5a395ceb5519ea479133a8c46"
+        },
+        "date": 1660901036207,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 240095,
+            "unit": "ns/op\t   23481 B/op\t     178 allocs/op",
+            "extra": "4364 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 230760,
+            "unit": "ns/op\t   29399 B/op\t     179 allocs/op",
+            "extra": "4851 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1396183,
+            "unit": "ns/op\t   27949 B/op\t     178 allocs/op",
+            "extra": "4695 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 2052555,
+            "unit": "ns/op\t   27090 B/op\t     176 allocs/op",
             "extra": "572 times\n2 procs"
           }
         ]
