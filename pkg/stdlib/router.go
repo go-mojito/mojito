@@ -7,6 +7,8 @@ import (
 
 	"github.com/go-mojito/mojito/pkg/router"
 	"github.com/julienschmidt/httprouter"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 type Router struct {
@@ -138,9 +140,11 @@ func (r *Router) WithMiddleware(handler interface{}) error {
 
 // ListenAndServe will start an HTTP webserver on the given address
 func (r *Router) ListenAndServe(address string) error {
+	h2s := &http2.Server{}
+
 	r.Server = &http.Server{
 		Addr:              address,
-		Handler:           r.Router,
+		Handler:           h2c.NewHandler(r.Router, h2s),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	return r.Server.ListenAndServe()

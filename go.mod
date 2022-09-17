@@ -9,3 +9,5 @@ require (
 	github.com/mitchellh/hashstructure/v2 v2.0.2
 	golang.org/x/net v0.0.0-20220513224357-95641704303c
 )
+
+require golang.org/x/text v0.3.7 // indirect
