@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662581332081,
+  "lastUpdate": 1663458148113,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3888,6 +3888,54 @@ window.BENCHMARK_DATA = {
             "value": 577850,
             "unit": "ns/op\t   29440 B/op\t     178 allocs/op",
             "extra": "2835 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2ff567462d45ecde7fa5fbee55f08d649afbd168",
+          "message": "Feat: go 1.19 (#21)\n\n* feat: Update to go 1.19\r\n\r\n* feat: Update benchmark to 1.19",
+          "timestamp": "2022-09-18T01:41:46+02:00",
+          "tree_id": "ccf86fd0148c1a2413ebe0ec809acba0c16ec925",
+          "url": "https://github.com/go-mojito/mojito/commit/2ff567462d45ecde7fa5fbee55f08d649afbd168"
+        },
+        "date": 1663458147160,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 333443,
+            "unit": "ns/op\t   22428 B/op\t     178 allocs/op",
+            "extra": "3364 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 339793,
+            "unit": "ns/op\t   29419 B/op\t     178 allocs/op",
+            "extra": "3362 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1727400,
+            "unit": "ns/op\t   21770 B/op\t     174 allocs/op",
+            "extra": "3670 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 2672548,
+            "unit": "ns/op\t   26748 B/op\t     175 allocs/op",
+            "extra": "457 times\n2 procs"
           }
         ]
       }
