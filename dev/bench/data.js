@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663458148113,
+  "lastUpdate": 1663458486906,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3936,6 +3936,54 @@ window.BENCHMARK_DATA = {
             "value": 2672548,
             "unit": "ns/op\t   26748 B/op\t     175 allocs/op",
             "extra": "457 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1cfb6a966b8faa142c6786e28394e8da5898b579",
+          "message": "feat: Add support for HTTP2 (#22)",
+          "timestamp": "2022-09-18T01:47:27+02:00",
+          "tree_id": "e84cae39bc8488024442449549e110b0bcb0ac27",
+          "url": "https://github.com/go-mojito/mojito/commit/1cfb6a966b8faa142c6786e28394e8da5898b579"
+        },
+        "date": 1663458485839,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 341790,
+            "unit": "ns/op\t   24132 B/op\t     180 allocs/op",
+            "extra": "3146 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 354815,
+            "unit": "ns/op\t   29360 B/op\t     180 allocs/op",
+            "extra": "3282 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 344069,
+            "unit": "ns/op\t   29297 B/op\t     179 allocs/op",
+            "extra": "3336 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 1382377,
+            "unit": "ns/op\t   29504 B/op\t     180 allocs/op",
+            "extra": "3400 times\n2 procs"
           }
         ]
       }
