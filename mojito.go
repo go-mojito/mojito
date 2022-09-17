@@ -210,8 +210,13 @@ func WithRoute(method string, path string, handler interface{}) error {
 }
 
 // ListenAndServe will start an HTTP webserver on the given address with the default router
-func ListenAndServe(args ...string) error {
-	return DefaultRouter().ListenAndServe(args[0])
+func ListenAndServe(address string) error {
+	return DefaultRouter().ListenAndServe(address)
+}
+
+// ListenAndServeTLS will start an HTTP/S webserver on the given address with the default router
+func ListenAndServeTLS(address string, certFile string, keyFile string) error {
+	return DefaultRouter().ListenAndServeTLS(address, certFile, keyFile)
 }
 
 // Shutdown will gracefully shutdown the default router
