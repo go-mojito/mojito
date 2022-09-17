@@ -1,6 +1,6 @@
 module github.com/go-mojito/mojito
 
-go 1.18
+go 1.19
 
 require (
 	github.com/infinytum/injector v0.0.2
