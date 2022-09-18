@@ -18,6 +18,8 @@ type Router interface {
 
 	// ListenAndServe will start an HTTP webserver on the given address
 	ListenAndServe(address string) error
+	// ListenAndServeTLS will start an HTTP/S webserver on the given address
+	ListenAndServeTLS(address string, certFile string, keyFile string) error
 	// Shutdown will gracefully shutdown the router
 	Shutdown() error
 }

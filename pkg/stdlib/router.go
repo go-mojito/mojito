@@ -150,6 +150,16 @@ func (r *Router) ListenAndServe(address string) error {
 	return r.Server.ListenAndServe()
 }
 
+// ListenAndServeTLS will start an HTTP/S webserver on the given address
+func (r *Router) ListenAndServeTLS(address string, certFile string, keyFile string) error {
+	r.Server = &http.Server{
+		Addr:              address,
+		Handler:           r.Router,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
+	return r.Server.ListenAndServeTLS(certFile, keyFile)
+}
+
 // Shutdown will gracefully shutdown the router
 func (r *Router) Shutdown() error {
 	return r.Server.Close()
