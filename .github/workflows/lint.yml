@@ -7,9 +7,17 @@ on:
 jobs:
   lint:
     name: Lint
+    strategy:
+      matrix:
+        go-version: [1.19.x]
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Repository
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+          check-latest: true
+      - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Run Golint
         uses: reviewdog/action-golangci-lint@v2

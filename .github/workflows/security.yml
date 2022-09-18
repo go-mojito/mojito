@@ -7,9 +7,17 @@ on:
 jobs:
   security:
     name: Security
+    strategy:
+      matrix:
+        go-version: [1.18.x, 1.19.x]
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Repository
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+          check-latest: true
+      - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Run Gosec
         uses: securego/gosec@master
