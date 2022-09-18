@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663460269904,
+  "lastUpdate": 1663462792251,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -4080,6 +4080,54 @@ window.BENCHMARK_DATA = {
             "value": 2377327,
             "unit": "ns/op\t   26921 B/op\t     176 allocs/op",
             "extra": "507 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b126ddbe8ded1fc8fd17349c82a79332ab609670",
+          "message": "Add govulncheck to security workflow (#25)",
+          "timestamp": "2022-09-18T02:59:09+02:00",
+          "tree_id": "64971c89806a0ab02424c70843709de2aeaa8dfb",
+          "url": "https://github.com/go-mojito/mojito/commit/b126ddbe8ded1fc8fd17349c82a79332ab609670"
+        },
+        "date": 1663462791800,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 236111,
+            "unit": "ns/op\t   24106 B/op\t     179 allocs/op",
+            "extra": "4608 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 234321,
+            "unit": "ns/op\t   29421 B/op\t     179 allocs/op",
+            "extra": "5180 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1212122,
+            "unit": "ns/op\t   29219 B/op\t     178 allocs/op",
+            "extra": "4237 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 1623809,
+            "unit": "ns/op\t   27376 B/op\t     176 allocs/op",
+            "extra": "704 times\n2 procs"
           }
         ]
       }
