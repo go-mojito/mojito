@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663458486906,
+  "lastUpdate": 1663459365128,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -3984,6 +3984,54 @@ window.BENCHMARK_DATA = {
             "value": 1382377,
             "unit": "ns/op\t   29504 B/op\t     180 allocs/op",
             "extra": "3400 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c9abf11cd3bcc33d359cb6d94af91f9305c24ed5",
+          "message": "feat: Add support for TLS (#23)",
+          "timestamp": "2022-09-18T02:01:51+02:00",
+          "tree_id": "6284fb19c929d123dd995912e52ab8cf42c4d964",
+          "url": "https://github.com/go-mojito/mojito/commit/c9abf11cd3bcc33d359cb6d94af91f9305c24ed5"
+        },
+        "date": 1663459363405,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 423699,
+            "unit": "ns/op\t   22747 B/op\t     179 allocs/op",
+            "extra": "2876 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 407548,
+            "unit": "ns/op\t   29354 B/op\t     180 allocs/op",
+            "extra": "2972 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 382509,
+            "unit": "ns/op\t   29238 B/op\t     179 allocs/op",
+            "extra": "2934 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 403576,
+            "unit": "ns/op\t   29450 B/op\t     179 allocs/op",
+            "extra": "2650 times\n2 procs"
           }
         ]
       }
