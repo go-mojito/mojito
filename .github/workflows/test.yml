@@ -1,31 +1,74 @@
 name: Test
+
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
+
 jobs:
-  test:
-    name: Test
+  go-test:
+    name: Go Test
     strategy:
       matrix:
         go-version: [1.18.x, 1.19.x]
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install Go
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
           check-latest: true
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Cache go mod
+      - name: Setup Go Caches
         uses: actions/cache@v3
         with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+            ~/Library/Caches/go-build
+            ~\AppData\Local\go-build
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-test-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-
+            ${{ runner.os }}-go-${{ matrix.go-version }}-test-
       - name: Run Tests
-        run: go test ./... -v -race
+        run: |
+          go mod download
+          go test ./... -v -race
+  gosec-test:
+    name: GoSec Test
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run GoSec
+        uses: securego/gosec@master
+         with:
+           args: -fmt sarif -out gosec.sarif -exclude-dir=internal/*/ ./...
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: gosec.sarif
+  govulncheck-test:
+    name: GoVulnCheck Test
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run Govulncheck
+        uses: kmulvey/govulncheck-action@v1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-vuln: true
