@@ -114,7 +114,7 @@ func (z *Logger) log(msg interface{}, level string) {
 	log.Printf("[%s] %s %s", level, fields, fmt.Sprint(msg))
 }
 
-// newBuiltinLogger will create a new instance of the mojito builtin logger implementation
+// NewLogger will create a new instance of the mojito builtin logger implementation
 func NewLogger() logger.Logger {
 	return &Logger{
 		logger: log.Default(),
