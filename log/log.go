@@ -1,9 +1,26 @@
 package log
 
 import (
+	"io"
+
 	"github.com/go-mojito/mojito"
 	"github.com/go-mojito/mojito/pkg/logger"
 )
+
+// SetOutput sets the output destination for the logger
+func SetOutput(w io.Writer) {
+	mojito.DefaultLogger().SetOutput(w)
+}
+
+// Field will add a field to a new logger and return it
+func Field(name string, val interface{}) mojito.Logger {
+	return mojito.DefaultLogger().Field(name, val)
+}
+
+// Fields will add multiple fields to a new logger and return it
+func Fields(fields logger.Fields) mojito.Logger {
+	return mojito.DefaultLogger().Fields(fields)
+}
 
 // Debug will write a debug log
 func Debug(msg interface{}) {
@@ -33,16 +50,6 @@ func Fatal(msg interface{}) {
 // Fatalf will write a fatal log sprintf-style
 func Fatalf(msg string, values ...interface{}) {
 	mojito.DefaultLogger().Fatalf(msg, values...)
-}
-
-// Field will add a field to a new logger and return it
-func Field(name string, val interface{}) mojito.Logger {
-	return mojito.DefaultLogger().Field(name, val)
-}
-
-// Fields will add multiple fields to a new logger and return it
-func Fields(fields logger.Fields) mojito.Logger {
-	return mojito.DefaultLogger().Fields(fields)
 }
 
 // Info will write a info log
