@@ -2,6 +2,7 @@ package stdlib
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -10,7 +11,13 @@ import (
 )
 
 type Logger struct {
+	logger *log.Logger
 	fields logger.Fields
+}
+
+// SetOutput sets the output destination for the logger
+func (z *Logger) SetOutput(w io.Writer) {
+	z.logger.SetOutput(w)
 }
 
 // Field will add a field to a new logger and return it
@@ -21,6 +28,7 @@ func (z *Logger) Field(name string, val interface{}) logger.Logger {
 // Fields will add multiple fields to a new logger and return it
 func (z *Logger) Fields(fields logger.Fields) logger.Logger {
 	newLog := &Logger{
+		logger: z.logger,
 		fields: z.fields.Clone(),
 	}
 	for name, val := range fields {
@@ -109,6 +117,7 @@ func (z *Logger) log(msg interface{}, level string) {
 // newBuiltinLogger will create a new instance of the mojito builtin logger implementation
 func NewLogger() logger.Logger {
 	return &Logger{
+		logger: log.Default(),
 		fields: make(logger.Fields),
 	}
 }
