@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663462792251,
+  "lastUpdate": 1667513439668,
   "repoUrl": "https://github.com/go-mojito/mojito",
   "entries": {
     "Benchmark": [
@@ -4128,6 +4128,54 @@ window.BENCHMARK_DATA = {
             "value": 1623809,
             "unit": "ns/op\t   27376 B/op\t     176 allocs/op",
             "extra": "704 times\n2 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "cedric@qubyte.io",
+            "name": "Cedric Lewe",
+            "username": "0SkillAllLuck"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "692c3040197f2d6734d7c647203153905ab0cae4",
+          "message": "Add option to set Logger output (#27)\n\n* Add option to set Logger output\r\n\r\n* Fix docs for NewLogger\r\n\r\n* Add SetOutput to log package\r\n\r\n* Make SetOutput return error",
+          "timestamp": "2022-11-03T23:09:47+01:00",
+          "tree_id": "68795a0287c6b3e48ac0b8dee4ab86a33d5fc232",
+          "url": "https://github.com/go-mojito/mojito/commit/692c3040197f2d6734d7c647203153905ab0cae4"
+        },
+        "date": 1667513438956,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "Benchmark_Router_Handler",
+            "value": 243793,
+            "unit": "ns/op\t   24148 B/op\t     179 allocs/op",
+            "extra": "4453 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_Not_Found",
+            "value": 241410,
+            "unit": "ns/op\t   29417 B/op\t     179 allocs/op",
+            "extra": "5072 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_1",
+            "value": 1331007,
+            "unit": "ns/op\t   27796 B/op\t     178 allocs/op",
+            "extra": "5214 times\n2 procs"
+          },
+          {
+            "name": "Benchmark_Router_Handler_With_Middleware_5",
+            "value": 1770775,
+            "unit": "ns/op\t   27314 B/op\t     176 allocs/op",
+            "extra": "669 times\n2 procs"
           }
         ]
       }
