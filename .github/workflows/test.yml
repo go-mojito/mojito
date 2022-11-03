@@ -32,9 +32,9 @@ jobs:
             ~/.cache/go-build
             ~/Library/Caches/go-build
             ~\AppData\Local\go-build
-          key: ${{ runner.os }-go-${{ matrix.go-version }}-test-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-test-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }-go-${{ matrix.go-version }}-test-
+            ${{ runner.os }}-go-${{ matrix.go-version }}-test-
       - name: Run Tests
         run: |
           go mod download
