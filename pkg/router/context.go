@@ -12,8 +12,7 @@ type Context interface {
 
 	/// Assistive functions
 
-	// Response is the mojito implementation of a response which wraps around a regular
-	// http.ResponseWriter object
+	// JSON writes any object to the response body as JSON
 	JSON(body interface{}) error
 
 	// PrettyJSON writes any object to the response body as pretty JSON
