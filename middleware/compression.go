@@ -19,5 +19,5 @@ func Compression(ctx mojito.Context, next func() error) (err error) {
 		return compressGzip(ctx, next)
 	}
 
-	return nil
+	return next()
 }
