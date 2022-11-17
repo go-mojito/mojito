@@ -3,6 +3,7 @@ module github.com/go-mojito/mojito
 go 1.19
 
 require (
+	github.com/andybalholm/brotli v1.0.4
 	github.com/infinytum/injector v0.0.2
 	github.com/infinytum/structures v0.0.3
 	github.com/julienschmidt/httprouter v1.3.0
