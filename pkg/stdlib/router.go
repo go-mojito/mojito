@@ -94,6 +94,7 @@ func (r *Router) WithRoute(method string, path string, handler interface{}) erro
 	}
 
 	r.Router.Handle(method, path, withMojitoHandlerRouter(h))
+	r.Routes = append(r.Routes, h)
 	return nil
 }
 
