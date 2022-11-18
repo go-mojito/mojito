@@ -6,6 +6,7 @@ import (
 
 	"github.com/andybalholm/brotli"
 	"github.com/go-mojito/mojito"
+	"github.com/go-mojito/mojito/log"
 )
 
 func compressBrotli(ctx mojito.Context, next func() error) (err error) {
@@ -23,7 +24,9 @@ func compressBrotli(ctx mojito.Context, next func() error) (err error) {
 	ctx.Response().SetWriter(brotliWriter)
 
 	defer func() {
-		writer.Close()
+		if err := writer.Close(); err != nil {
+			log.Field("cause", "error closing brotli writer").Error(err)
+		}
 		ctx.Response().Header().Set("Content-Length", fmt.Sprint(brotliWriter.size))
 	}()
 
