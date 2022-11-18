@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-mojito/mojito"
+	"github.com/go-mojito/mojito/log"
 )
 
 func compressGzip(ctx mojito.Context, next func() error) (err error) {
@@ -18,7 +19,9 @@ func compressGzip(ctx mojito.Context, next func() error) (err error) {
 	}
 	ctx.Response().SetWriter(gzipWriter)
 	defer func() {
-		writer.Close()
+		if err := writer.Close(); err != nil {
+			log.Field("cause", "error closing gzip writer").Error(err)
+		}
 		ctx.Response().Header().Set("Content-Length", fmt.Sprint(gzipWriter.size))
 	}()
 	return next()
