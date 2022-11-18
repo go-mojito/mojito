@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"compress/gzip"
-	"fmt"
 	"net/http"
 
 	"github.com/go-mojito/mojito"
@@ -11,26 +10,24 @@ import (
 
 func compressGzip(ctx mojito.Context, next func() error) (err error) {
 	writer := gzip.NewWriter(ctx.Response().GetWriter())
-	ctx.Response().Header().Set("Content-Encoding", "gzip")
-	ctx.Response().Header().Set("Vary", "Accept-Encoding")
-	gzipWriter := &gzipWriter{
-		ResponseWriter: ctx.Response().GetWriter(),
-		writer:         writer,
-	}
-	ctx.Response().SetWriter(gzipWriter)
 	defer func() {
 		if err := writer.Close(); err != nil {
-			log.Field("cause", "error closing gzip writer").Error(err)
+			log.Error(err)
 		}
-		ctx.Response().Header().Set("Content-Length", fmt.Sprint(gzipWriter.size))
 	}()
+
+	ctx.Response().Header().Set("Content-Encoding", "gzip")
+	ctx.Response().Header().Set("Vary", "Accept-Encoding")
+	ctx.Response().SetWriter(&gzipWriter{
+		ResponseWriter: ctx.Response().GetWriter(),
+		writer:         writer,
+	})
 	return next()
 }
 
 type gzipWriter struct {
 	http.ResponseWriter
 	writer *gzip.Writer
-	size   int
 }
 
 func (g *gzipWriter) WriteString(s string) (int, error) {
@@ -39,9 +36,7 @@ func (g *gzipWriter) WriteString(s string) (int, error) {
 
 func (g *gzipWriter) Write(data []byte) (int, error) {
 	g.Header().Del("Content-Length")
-	len, err := g.writer.Write(data)
-	g.size += len
-	return len, err
+	return g.writer.Write(data)
 }
 
 // Fix: https://github.com/mholt/caddy/issues/38

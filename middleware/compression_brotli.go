@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/andybalholm/brotli"
@@ -10,31 +9,23 @@ import (
 )
 
 func compressBrotli(ctx mojito.Context, next func() error) (err error) {
-	writer := brotli.NewWriterOptions(ctx.Response().GetWriter(), brotli.WriterOptions{
-		Quality: brotli.DefaultCompression,
-	})
+	writer := brotli.NewWriter(ctx.Response().GetWriter())
+	defer func() {
+		if err := writer.Close(); err != nil {
+			log.Error(err)
+		}
+	}()
 
 	ctx.Response().Header().Set("Content-Encoding", "br")
 	ctx.Response().Header().Set("Vary", "Accept-Encoding")
-
-	brotliWriter := &brotliWriter{
+	ctx.Response().SetWriter(&brotliWriter{
 		ResponseWriter: ctx.Response().GetWriter(),
 		writer:         writer,
-	}
-	ctx.Response().SetWriter(brotliWriter)
-
-	defer func() {
-		if err := writer.Close(); err != nil {
-			log.Field("cause", "error closing brotli writer").Error(err)
-		}
-		ctx.Response().Header().Set("Content-Length", fmt.Sprint(brotliWriter.size))
-	}()
-
+	})
 	return next()
 }
 
 type brotliWriter struct {
-	size int
 	http.ResponseWriter
 	writer *brotli.Writer
 }
@@ -45,9 +36,7 @@ func (br *brotliWriter) WriteString(s string) (int, error) {
 
 func (br *brotliWriter) Write(data []byte) (int, error) {
 	br.Header().Del("Content-Length")
-	len, err := br.writer.Write(data)
-	br.size += len
-	return len, err
+	return br.writer.Write(data)
 }
 
 // Fix: https://github.com/mholt/caddy/issues/38
