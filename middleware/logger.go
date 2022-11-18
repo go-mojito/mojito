@@ -8,8 +8,8 @@ import (
 	"github.com/go-mojito/mojito/pkg/logger"
 )
 
-// RequestLogger provides a simple middleware implementation that will log every request handled by mojito
-func RequestLogger(ctx mojito.Context, next func() error) (err error) {
+// Logging provides a simple middleware implementation that will log every request handled by mojito
+func Logging(ctx mojito.Context, next func() error) (err error) {
 	var start = time.Now()
 	err = next()
 	go log.Fields(logger.Fields{
@@ -17,4 +17,10 @@ func RequestLogger(ctx mojito.Context, next func() error) (err error) {
 		"ms":     time.Since(start).Milliseconds(),
 	}).Info(ctx.Request().GetRequest().URL.Path)
 	return err
+}
+
+// RequestLogger provides a simple middleware implementation that will log every request handled by mojito
+// Deprecated: use middleware.Logging instead
+func RequestLogger(ctx mojito.Context, next func() error) (err error) {
+	return Logging(ctx, next)
 }
