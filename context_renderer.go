@@ -2,6 +2,7 @@ package mojito
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/go-mojito/mojito/pkg/renderer"
@@ -24,6 +25,12 @@ func (ctx *builtinRenderContext) MustView(view string) {
 	}
 }
 
+func (ctx *builtinRenderContext) setDetectedContentType(data string) {
+	if ctx.Response().Header().Get("Content-Type") == "" {
+		ctx.Response().Header().Set("Content-Type", http.DetectContentType([]byte(data)))
+	}
+}
+
 // View implements RendererContext
 func (ctx *builtinRenderContext) View(view string) error {
 	viewbagHash, err := hashstructure.Hash(ctx.ViewBag(), hashstructure.FormatV2, nil)
@@ -35,6 +42,7 @@ func (ctx *builtinRenderContext) View(view string) error {
 	if exists, err := cache.Contains(viewCacheKey); err == nil && exists {
 		var render string
 		if err := cache.Get(viewCacheKey, &render); err == nil {
+			ctx.setDetectedContentType(render)
 			return ctx.String(render)
 		}
 	}
@@ -59,6 +67,7 @@ func (ctx *builtinRenderContext) View(view string) error {
 		}
 	}
 
+	ctx.setDetectedContentType(render)
 	return ctx.String(render)
 }
 

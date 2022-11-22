@@ -37,6 +37,7 @@ func (ctx *builtinContext) JSON(body interface{}) error {
 		return err
 	}
 
+	ctx.Response().Header().Set("Content-Type", "application/json")
 	_, err = ctx.response.Write(data)
 	return err
 }
@@ -48,6 +49,7 @@ func (ctx *builtinContext) PrettyJSON(body interface{}) error {
 		return err
 	}
 
+	ctx.Response().Header().Set("Content-Type", "application/json")
 	_, err = ctx.response.Write(data)
 	return err
 }
