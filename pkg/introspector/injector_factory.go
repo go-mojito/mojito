@@ -1,4 +1,4 @@
-package router
+package introspector
 
 import (
 	"fmt"
@@ -7,24 +7,7 @@ import (
 	"github.com/infinytum/injector"
 )
 
-func newContextFactory(ctx Context, next HandlerFunc) reflect.Value {
-	return reflect.ValueOf(ctx)
-}
-
-func newNextFuncFactory(ctx Context, next HandlerFunc) reflect.Value {
-	if next == nil {
-		return reflect.ValueOf(func() error {
-			// Do nothing because it's an empty default handler
-			return nil
-		})
-	}
-	return reflect.ValueOf(func() error {
-		return next(ctx)
-	})
-}
-
-// newDefaultHandlerArgFactory will create a fake factory that attempts to dependency inject the argument.
-func newDefaultHandlerArgFactory(forType reflect.Type) (HandlerIntrospectorArgFactory, error) {
+func InjectorFactoryFunc(forType reflect.Type) (*reflect.Value, error) {
 	isPointer := false
 	if _, resolveErr := injector.InjectT(forType); resolveErr != nil && forType.Kind() == reflect.Pointer {
 		isPointer = true
@@ -55,7 +38,5 @@ func newDefaultHandlerArgFactory(forType reflect.Type) (HandlerIntrospectorArgFa
 	if !isPointer {
 		value = value.Elem()
 	}
-	return func(ctx Context, next HandlerFunc) reflect.Value {
-		return value
-	}, nil
+	return &value, nil
 }
