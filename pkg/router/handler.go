@@ -17,7 +17,7 @@ type Handler interface {
 	AddMiddleware(middleware interface{}) error
 
 	// Introspection will return the introspected information about the handler
-	Introspection() HandlerIntrospector
+	Introspection() HandlerIntrospection
 
 	// HandlerFunc will generate the original handlers function
 	// without any chained middlewares

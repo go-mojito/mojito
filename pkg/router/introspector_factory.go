@@ -1,36 +1,50 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 	"reflect"
-	"sync"
 )
 
-var (
-	factoryMap     = make(map[reflect.Type]HandlerIntrospectorArgFactory)
-	factoryMapLock = sync.Mutex{}
-)
+/// Middleware-related factories
 
-func init() {
-	// Stdlib
-	RegisterHandlerArgFactory[*http.Request](stdlibRequestFactory)
-	RegisterHandlerArgFactory[http.ResponseWriter](stdlibResponseFactory)
-	RegisterHandlerArgFactory[http.Handler](stdlibHandlerFactory)
-	RegisterHandlerArgFactory[http.HandlerFunc](stdlibHandlerFactory)
-
-	// Middleware-related
-	RegisterHandlerArgFactory[func() error](newNextFuncFactory)
-	RegisterHandlerArgFactory[HandlerFunc](newNextFuncFactory)
-
-	// Context
-	RegisterHandlerArgFactory[Context](newContextFactory)
+func newContextFactory(ctx Context, next HandlerFunc) reflect.Value {
+	return reflect.ValueOf(ctx)
 }
 
-// RegisterHandlerArgFactory will register a factory function for the given generic type
-// which will enable the generic type to be automatically resolved in all handlers.
-func RegisterHandlerArgFactory[T any](factory HandlerIntrospectorArgFactory) {
-	factoryMapLock.Lock()
-	defer factoryMapLock.Unlock()
-	argType := reflect.TypeOf((*T)(nil)).Elem()
-	factoryMap[argType] = factory
+func newNextFuncFactory(ctx Context, next HandlerFunc) reflect.Value {
+	if next == nil {
+		return reflect.ValueOf(func() error {
+			// Do nothing because it's an empty default handler
+			return nil
+		})
+	}
+	return reflect.ValueOf(func() error {
+		return next(ctx)
+	})
+}
+
+/// Stdlib factories
+
+func stdlibRequestFactory(ctx Context, next HandlerFunc) reflect.Value {
+	return reflect.ValueOf(ctx.Request().GetRequest())
+}
+
+func stdlibResponseFactory(ctx Context, next HandlerFunc) reflect.Value {
+	return reflect.ValueOf(ctx.Response().GetWriter())
+}
+
+func stdlibHandlerFactory(ctx Context, next HandlerFunc) reflect.Value {
+	if next == nil {
+		return reflect.ValueOf(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Do nothing because it's an empty default handler
+		}))
+	}
+	return reflect.ValueOf(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx.Response().SetWriter(w)
+		ctx.Request().SetRequest(r)
+		if err := next(ctx); err != nil {
+			fmt.Printf("stdlib handler failed: %s", err)
+		}
+	}))
 }

@@ -20,7 +20,7 @@ var (
 // Handler defines a router handler
 type builtinHandler struct {
 	// introspection contains the introspected type and argument information
-	introspection HandlerIntrospector
+	introspection HandlerIntrospection
 
 	// contextValue may be a reflection of the context argument which has been filled
 	// with all expected dependencies ahead of time. This is for caching and performance purposes
@@ -58,7 +58,7 @@ func (h *builtinHandler) AddMiddleware(middleware interface{}) error {
 }
 
 // Introspection will return the introspected information about the handler
-func (h builtinHandler) Introspection() HandlerIntrospector {
+func (h builtinHandler) Introspection() HandlerIntrospection {
 	return h.introspection
 }
 
@@ -135,7 +135,7 @@ func GetOrCreateHandler(handler interface{}) (Handler, error) {
 // NewHandler will introspect the given handler and, if valid, return
 // a new handler instance that can serve a route
 func NewHandler(handler interface{}) (Handler, error) {
-	intro, err := IntrospectHandler(handler)
+	intro, err := handlerIntrospector.Introspect(handler)
 	if err != nil {
 		return nil, err
 	}
