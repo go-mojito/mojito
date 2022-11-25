@@ -11,4 +11,7 @@ require (
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
 )
 
-require golang.org/x/text v0.3.7 // indirect
+require (
+	github.com/infinytum/introspector v0.0.0-20221124203324-542f216aab81 // indirect
+	golang.org/x/text v0.3.7 // indirect
+)

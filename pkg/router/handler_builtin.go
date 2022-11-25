@@ -135,9 +135,9 @@ func GetOrCreateHandler(handler interface{}) (Handler, error) {
 // NewHandler will introspect the given handler and, if valid, return
 // a new handler instance that can serve a route
 func NewHandler(handler interface{}) (Handler, error) {
-	intro, err := handlerIntrospector.Introspect(handler)
-	if err != nil {
-		return nil, err
+	intro, errs := handlerIntrospector.Introspect(handler)
+	if len(errs) > 0 {
+		return nil, fmt.Errorf("failed to introspect handler: %v", errs)
 	}
 	h := &builtinHandler{
 		introspection: intro,

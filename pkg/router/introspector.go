@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/go-mojito/mojito/pkg/introspector"
+	"github.com/infinytum/introspector"
 )
 
 var (
