@@ -2,6 +2,8 @@ github.com/andybalholm/brotli v1.0.4 h1:V7DdXeJtZscaqfNuAdSRuRFzuiKlHSC/Zh3zl9qY
 github.com/andybalholm/brotli v1.0.4/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/infinytum/injector v0.0.2 h1:isJZ27MvijpoQzzJaOWLqfyczp1EP9CM786Ef1KelFI=
 github.com/infinytum/injector v0.0.2/go.mod h1:/8absiTs7Afl21cGagOLkXPrypVGZrOSkH4qu/IsP28=
+github.com/infinytum/introspector v0.0.0-20221124203324-542f216aab81 h1:RG//Cr6nLKKWbdNDGavwFEuUInvzIk2wfmPG8LZBVaI=
+github.com/infinytum/introspector v0.0.0-20221124203324-542f216aab81/go.mod h1:dmvMBbIXJwxA894yU/cUHs+qFznxcxM9nqWq+kL/dPc=
 github.com/infinytum/structures v0.0.3 h1:OackN0CC4OKpUwp9esX/VbzIbdql2t9pccPWA1dZANI=
 github.com/infinytum/structures v0.0.3/go.mod h1:4vDl7BamOX2fF0B+h2n/xGIorGv1u9ZQ9wgF6IW/Kc8=
 github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
