@@ -1,9 +1,15 @@
 package router
 
-import "github.com/infinytum/structures"
+import (
+	"context"
+
+	"github.com/infinytum/structures"
+)
 
 // Context contains the request and response objects of a request.
 type Context interface {
+	context.Context
+
 	// Request returns the request object for the current context
 	Request() Request
 
@@ -29,10 +35,6 @@ type Context interface {
 
 	// String will write a string to the response body
 	String(body string) error
-
-	complete()
-	Completed() bool
-	CompletedChan() chan bool
 }
 
 // ErrorContext contains context for error handlers.

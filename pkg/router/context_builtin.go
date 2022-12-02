@@ -1,9 +1,11 @@
 package router
 
 import (
+	"context"
 	"encoding/json"
 	"encoding/xml"
 	"net/http"
+	"time"
 
 	"github.com/infinytum/structures"
 )
@@ -12,11 +14,13 @@ type builtinContext struct {
 	request  Request
 	response Response
 
-	completed     bool
-	completedChan chan bool
+	doneError error
+	doneChan  chan struct{}
 
 	metadata structures.Map[string, interface{}]
 }
+
+/// Request and response functions
 
 // Request implements Context
 func (ctx *builtinContext) Request() Request {
@@ -75,28 +79,43 @@ func (ctx *builtinContext) String(body string) error {
 	return err
 }
 
-func (ctx *builtinContext) complete() {
-	ctx.completed = true
-	close(ctx.completedChan)
+/// context.Context functions
+
+// Deadline implements context.Context
+func (*builtinContext) Deadline() (deadline time.Time, ok bool) {
+	return time.Time{}, false
 }
 
-func (ctx *builtinContext) Completed() bool {
-	return ctx.completed
+// Done implements context.Context
+func (ctx *builtinContext) Done() <-chan struct{} {
+	return ctx.doneChan
 }
 
-func (ctx *builtinContext) CompletedChan() chan bool {
-	return ctx.completedChan
+// Err implements context.Context
+func (ctx *builtinContext) Err() error {
+	return ctx.doneError
 }
 
-func NewContextFromStdlib(w http.ResponseWriter, req *http.Request) *builtinContext {
+// Value implements context.Context
+func (ctx *builtinContext) Value(key any) any {
+	return nil
+}
+
+func (ctx *builtinContext) cancelFunc() {
+	ctx.doneError = context.Canceled
+	close(ctx.doneChan)
+}
+
+func NewContextFromStdlib(w http.ResponseWriter, req *http.Request) (*builtinContext, context.CancelFunc) {
 	return NewContext(NewRequest(req), NewResponse(w))
 }
 
-func NewContext(req Request, res Response) *builtinContext {
-	return &builtinContext{
-		request:       req,
-		response:      res,
-		completedChan: make(chan bool),
-		metadata:      structures.NewMap[string, interface{}](),
+func NewContext(req Request, res Response) (*builtinContext, context.CancelFunc) {
+	ctx := &builtinContext{
+		request:  req,
+		response: res,
+		doneChan: make(chan struct{}),
+		metadata: structures.NewMap[string, interface{}](),
 	}
+	return ctx, ctx.cancelFunc
 }

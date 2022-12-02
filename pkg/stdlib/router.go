@@ -170,20 +170,22 @@ func withMojitoHandler(handler router.Handler) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		mreq := router.NewRequest(req)
 		mres := router.NewResponse(res)
-		ctx := router.NewContext(mreq, mres)
+		ctx, cancel := router.NewContext(mreq, mres)
 		if err := handler.Serve(ctx); err != nil {
 			panic(err)
 		}
+		cancel()
 	}
 }
 
 func withMojitoHandlerError(handler router.Handler) func(http.ResponseWriter, *http.Request, interface{}) {
 	return func(res http.ResponseWriter, req *http.Request, rec interface{}) {
-		ctx := router.NewContextFromStdlib(res, req)
+		ctx, cancel := router.NewContextFromStdlib(res, req)
 		err := router.NewErrorContext(ctx, fmt.Errorf("%v", rec))
 		if err := handler.Serve(err); err != nil {
 			panic(err)
 		}
+		cancel()
 	}
 }
 
@@ -196,9 +198,10 @@ func withMojitoHandlerRouter(handler router.Handler) httprouter.Handle {
 		mreq := router.NewRequest(req)
 		mreq.SetParams(params)
 		mres := router.NewResponse(res)
-		ctx := router.NewContext(mreq, mres)
+		ctx, cancel := router.NewContext(mreq, mres)
 		if err := handler.Serve(ctx); err != nil {
 			panic(err)
 		}
+		cancel()
 	}
 }

@@ -10,7 +10,7 @@ import (
 
 var (
 	// ErrorNotAHandler is returned when an attempt to get a handler from an interface{} failed.
-	ErrorNotAHandler = errors.New("Given handler value is not of the type router.Handler")
+	ErrorNotAHandler = errors.New("given handler value is not of the type router.Handler")
 	// handlerInterface is the golang type reflection of a router handler
 	handlerInterface = reflect.TypeOf((*Handler)(nil)).Elem()
 	// handlerablenterface is the golang type reflection of a handleable
@@ -22,9 +22,6 @@ type builtinHandler struct {
 	// introspection contains the introspected type and argument information
 	introspection HandlerIntrospection
 
-	// contextValue may be a reflection of the context argument which has been filled
-	// with all expected dependencies ahead of time. This is for caching and performance purposes
-	contextValue reflect.Value
 	// reflectValue is a reflection of the handler object used to call the original handler
 	reflectValue reflect.Value
 	// reflectHandler is the current handler to be called when served
@@ -85,7 +82,6 @@ func (h builtinHandler) Serve(ctx Context) (err error) {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("%v: %s", e, string(debug.Stack()))
 		}
-		ctx.complete()
 	}()
 	return h.reflectHandler(ctx)
 }
