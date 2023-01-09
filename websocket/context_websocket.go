@@ -40,7 +40,9 @@ func (ctx *builtinContext) EnableReadCheck() {
 		for {
 			if _, err := ctx.conn.UnderlyingConn().Read(make([]byte, 1)); err != nil && err == io.EOF && !ctx.closed {
 				ctx.closed = true
-				ctx.conn.Close()
+				if err := ctx.conn.Close(); err != nil {
+					log.Errorf("Error while closing websocket connection: %v", err)
+				}
 				return
 			}
 			if ctx.closed {
@@ -67,7 +69,7 @@ func (ctx *builtinContext) Receive(out interface{}) (err error) {
 	}
 	if err != nil && err == io.EOF {
 		ctx.closed = true
-		ctx.conn.Close()
+		err = ctx.conn.Close()
 	}
 	return
 }
