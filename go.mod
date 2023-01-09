@@ -10,7 +10,7 @@ require (
 	github.com/infinytum/structures v0.0.3
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mitchellh/hashstructure/v2 v2.0.2
-	golang.org/x/net v0.0.0-20220909164309-bea034e7d591
+	golang.org/x/net v0.4.0
 )
 
-require golang.org/x/text v0.3.7 // indirect
+require golang.org/x/text v0.5.0 // indirect
