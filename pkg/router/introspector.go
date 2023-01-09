@@ -89,7 +89,7 @@ func RegisterHandlerArgFactory[T any](factory HandlerArgFactory) {
 // The factory function will be called only once per request.
 func RegisterStatefulHandlerArgFactory[T any](factory HandlerArgFactory) {
 	argType := reflect.TypeOf((*T)(nil)).Elem()
-	introspector.RegisterFactory[T](func(ctx Context, next HandlerFunc) (reflect.Value, error) {
+	introspector.RegisterFactory[T](HandlerArgFactory(func(ctx Context, next HandlerFunc) (reflect.Value, error) {
 		if ctx.Value(argType) == nil {
 			val, err := factory(ctx, next)
 			if err != nil {
@@ -98,5 +98,5 @@ func RegisterStatefulHandlerArgFactory[T any](factory HandlerArgFactory) {
 			ctx.SetValue(argType, val)
 		}
 		return ctx.Value(argType).(reflect.Value), nil
-	}, handlerIntrospector)
+	}), handlerIntrospector)
 }
