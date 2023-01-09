@@ -58,10 +58,12 @@ func (ctx *builtinContext) Receive(out interface{}) (err error) {
 
 	if outType == nil || outType.Kind() == reflect.Struct || outType.Kind() == reflect.Interface || outType.Kind() == reflect.Map {
 		err = ctx.conn.ReadJSON(out)
-	} else {
+	} else if outType.AssignableTo(reflect.TypeOf([]byte(""))) {
 		_, data, err2 := ctx.conn.ReadMessage()
-		out = data
+		copy(out.([]byte), data)
 		err = err2
+	} else {
+		err = errors.New("unsupported target type, must be struct, interface, map or byte array")
 	}
 	if err != nil && err == io.EOF {
 		ctx.closed = true
