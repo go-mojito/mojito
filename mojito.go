@@ -8,7 +8,6 @@ import (
 	"github.com/go-mojito/mojito/pkg/router"
 	"github.com/go-mojito/mojito/pkg/stdlib"
 	"github.com/infinytum/injector"
-	"golang.org/x/net/websocket"
 )
 
 func init() {
@@ -36,30 +35,12 @@ func init() {
 		fmt.Println("Cannot register default router dependency: ", err)
 	}
 
-	router.RegisterHandlerArgFactory[Context](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
-		return reflect.ValueOf(ctx)
+	router.RegisterStatefulHandlerArgFactory[Context](func(ctx router.Context, next router.HandlerFunc) (reflect.Value, error) {
+		return reflect.ValueOf(newMojitoContext(ctx)), nil
 	})
-	router.RegisterHandlerArgFactory[ErrorContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
-		if errCtx, ok := ctx.(ErrorContext); ok {
-			return reflect.ValueOf(errCtx)
-		}
-		return reflect.ValueOf(router.NewErrorContext(ctx, nil))
-	})
-	router.RegisterHandlerArgFactory[RendererContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
-		return reflect.ValueOf(NewRenderContext(ctx))
-	})
-	router.RegisterHandlerArgFactory[WebSocketContext](func(ctx router.Context, next router.HandlerFunc) reflect.Value {
-		c := make(chan *websocket.Conn)
-		// Sadly the websocket package does not expose a way to make websocket.Conn objects
-		// Thats why this ugly hack is needed to get a connection object.
-		s := websocket.Server{
-			Handler: websocket.Handler(func(conn *websocket.Conn) {
-				c <- conn
-				<-ctx.CompletedChan()
-			}),
-		}
-		go s.ServeHTTP(ctx.Response().GetWriter(), ctx.Request().GetRequest())
-		return reflect.ValueOf(NewWebsocketContext(ctx, <-c))
+
+	router.RegisterHandlerArgFactory[RendererContext](func(ctx router.Context, next router.HandlerFunc) (reflect.Value, error) {
+		return reflect.ValueOf(NewRenderContext(ctx)), nil
 	})
 }
 

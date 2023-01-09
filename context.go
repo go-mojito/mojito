@@ -10,16 +10,28 @@ import (
 // Context contains the request and response objects of a request.
 type Context interface {
 	router.Context
-}
 
-// ErrorContext contains for error handlers.
-type ErrorContext interface {
-	router.ErrorContext
+	/// Assistive functions
+
+	// JSON writes any object to the response body as JSON
+	JSON(body interface{}) error
+
+	// PrettyJSON writes any object to the response body as pretty JSON
+	PrettyJSON(body interface{}) error
+
+	// ReadJSON reads the request body as JSON and unmarshals it into the given object
+	ReadJSON(obj interface{}) error
+
+	// ReadXML reads the request body as XML and unmarshals it into the given object
+	ReadXML(obj interface{}) error
+
+	// String will write a string to the response body
+	String(body string) error
 }
 
 // RendererContext contains context for renderer based functionality.
 type RendererContext interface {
-	Context
+	router.Context
 
 	// SetViewCacheTTL sets the duration a rendered view is kept in the cache.
 	// If the duration is 0, the view is cached forever.
@@ -35,13 +47,4 @@ type RendererContext interface {
 
 	// ViewBag
 	ViewBag() renderer.ViewBag
-}
-
-// WebSocketContext contains context for websocket functionality.
-type WebSocketContext interface {
-	Context
-	Closed() bool
-	EnableReadCheck()
-	Receive(out interface{}) error
-	Send(data interface{}) error
 }

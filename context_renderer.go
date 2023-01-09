@@ -11,11 +11,12 @@ import (
 )
 
 const viewCachePrefix = "view_cache_"
-const viewBagMetadataKey = "mojito.pkg.renderer.ViewBag"
-const viewCacheTTLKey = "mojito.pkg.renderer.ViewCacheTTL"
 
 type builtinRenderContext struct {
 	router.Context
+
+	cacheTTL time.Duration
+	viewBag  renderer.ViewBag
 }
 
 // MustView implements RendererContext
@@ -43,7 +44,7 @@ func (ctx *builtinRenderContext) View(view string) error {
 		var render string
 		if err := cache.Get(viewCacheKey, &render); err == nil {
 			ctx.setDetectedContentType(render)
-			return ctx.String(render)
+			return ctx.Response().WriteString(render)
 		}
 	}
 
@@ -52,45 +53,37 @@ func (ctx *builtinRenderContext) View(view string) error {
 		return err
 	}
 
-	viewCacheTTL, ok := ctx.Metadata().GetOrDefault(viewCacheTTLKey, time.Second*5).(time.Duration)
-	if !ok {
-		panic("viewCacheTTL is not time.Duration")
-	}
-	if viewCacheTTL >= 0 {
+	if ctx.cacheTTL >= 0 {
 		if err := cache.Set(viewCacheKey, render); err != nil {
 			return err
 		}
-		if viewCacheTTL != 0 {
-			if err := cache.ExpireAfter(viewCacheKey, viewCacheTTL); err != nil {
+		if ctx.cacheTTL != 0 {
+			if err := cache.ExpireAfter(viewCacheKey, ctx.cacheTTL); err != nil {
 				return err
 			}
 		}
 	}
 
 	ctx.setDetectedContentType(render)
-	return ctx.String(render)
+	return ctx.Response().WriteString(render)
 }
 
 // ViewBag implements RendererContext
 func (ctx *builtinRenderContext) ViewBag() renderer.ViewBag {
-	viewBag, ok := ctx.Context.Metadata().GetOrSet(viewBagMetadataKey, renderer.NewViewBag()).(renderer.ViewBag)
-	if !ok {
-		panic("ViewBag is not a renderer.ViewBag")
-	}
-	return viewBag
+	return ctx.viewBag
 }
 
 // SetViewCacheTTL sets the duration a rendered view is kept in the cache.
 // If the duration is 0, the view is cached forever.
 // If the duration is negative, the view is not cached.
 func (ctx *builtinRenderContext) SetViewCacheTTL(t time.Duration) {
-	if err := ctx.Context.Metadata().Set(viewCacheTTLKey, t); err != nil {
-		DefaultLogger().Errorf("failed to set view cache ttl: %s", err)
-	}
+	ctx.cacheTTL = t
 }
 
 func NewRenderContext(ctx router.Context) RendererContext {
 	return &builtinRenderContext{
-		Context: ctx,
+		Context:  ctx,
+		cacheTTL: time.Second * 5,
+		viewBag:  renderer.NewViewBag(),
 	}
 }

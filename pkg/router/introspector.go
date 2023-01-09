@@ -9,21 +9,21 @@ import (
 
 var (
 	errorInterface      = reflect.TypeOf((*error)(nil)).Elem()
-	handlerIntrospector introspector.Introspector[HandlerIntrospectorArgFactory, builtinHandlerIntrospection]
+	handlerIntrospector introspector.Introspector[HandlerArgFactory, builtinHandlerIntrospection]
 	nextFuncTypeStdlib  = reflect.TypeOf((*http.Handler)(nil)).Elem()
 )
 
 func init() {
-	i, err := introspector.NewIntrospector[HandlerIntrospectorArgFactory, builtinHandlerIntrospection]()
+	i, err := introspector.NewIntrospector[HandlerArgFactory, builtinHandlerIntrospection]()
 	if err != nil {
 		panic(err)
 	}
 	handlerIntrospector = i
 
-	handlerIntrospector.SetDefaultFactory(func(t reflect.Type) (HandlerIntrospectorArgFactory, error) {
+	handlerIntrospector.SetDefaultFactory(func(t reflect.Type) (HandlerArgFactory, error) {
 		val, err := introspector.InjectorFactoryFunc(t)
-		return func(ctx Context, next HandlerFunc) reflect.Value {
-			return *val
+		return func(ctx Context, next HandlerFunc) (reflect.Value, error) {
+			return *val, err
 		}, err
 	})
 
@@ -38,16 +38,16 @@ func init() {
 	RegisterHandlerArgFactory[HandlerFunc](newNextFuncFactory)
 
 	// Context
-	RegisterHandlerArgFactory[Context](newContextFactory)
+	RegisterStatefulHandlerArgFactory[Context](newContextFactory)
 }
 
 // HandlerArgFactory defines the signature of handler argument factories
-type HandlerIntrospectorArgFactory func(ctx Context, next HandlerFunc) reflect.Value
+type HandlerArgFactory func(ctx Context, next HandlerFunc) (reflect.Value, error)
 
 // HandlerIntrospection is a structure that contains all introspected details
 // about a (potential) handler
 type HandlerIntrospection interface {
-	introspector.IntrospectorResult[HandlerIntrospectorArgFactory]
+	introspector.IntrospectorResult[HandlerArgFactory]
 
 	// CanError returns true when the handler func is returning error
 	CanError() bool
@@ -59,7 +59,7 @@ type HandlerIntrospection interface {
 // HandlerIntrospection is a structure that contains all introspected details
 // about a (potential) handler
 type builtinHandlerIntrospection struct {
-	introspector.IntrospectorResult[HandlerIntrospectorArgFactory]
+	introspector.IntrospectorResult[HandlerArgFactory]
 }
 
 // CanError returns true when the handler func is returning error
@@ -80,6 +80,23 @@ func (h builtinHandlerIntrospection) IsStdlibMiddleware() bool {
 
 // RegisterHandlerArgFactory will register a factory function for the given generic type
 // which will enable the generic type to be automatically resolved in all handlers.
-func RegisterHandlerArgFactory[T any](factory HandlerIntrospectorArgFactory) {
+func RegisterHandlerArgFactory[T any](factory HandlerArgFactory) {
 	introspector.RegisterFactory[T](factory, handlerIntrospector)
+}
+
+// RegisterStatefulHandlerArgFactory will register a factory function for the given generic type
+// which will enable the generic type to be automatically resolved in all handlers.
+// The factory function will be called only once per request.
+func RegisterStatefulHandlerArgFactory[T any](factory HandlerArgFactory) {
+	argType := reflect.TypeOf((*T)(nil)).Elem()
+	introspector.RegisterFactory[T](func(ctx Context, next HandlerFunc) (reflect.Value, error) {
+		if ctx.Value(argType) == nil {
+			val, err := factory(ctx, next)
+			if err != nil {
+				return reflect.ValueOf(nil), err
+			}
+			ctx.SetValue(argType, val)
+		}
+		return ctx.Value(argType).(reflect.Value), nil
+	}, handlerIntrospector)
 }

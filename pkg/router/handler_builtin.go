@@ -40,7 +40,11 @@ func (h *builtinHandler) AddMiddleware(middleware interface{}) error {
 	h.reflectHandler = func(ctx Context) error {
 		arguments := make([]reflect.Value, middleHandler.Introspection().Type().NumIn())
 		for i := 0; i < middleHandler.Introspection().Type().NumIn(); i++ {
-			arguments[i] = middleHandler.Introspection().FactoryMap()[i](ctx, oldHandler)
+			argVal, err := middleHandler.Introspection().FactoryMap()[i](ctx, oldHandler)
+			if err != nil {
+				return err
+			}
+			arguments[i] = argVal
 		}
 		returnVal := middleHandler.Value().Call(arguments)
 		if middleHandler.Introspection().CanError() && !returnVal[0].IsNil() {
@@ -65,7 +69,11 @@ func (h builtinHandler) HandlerFunc() HandlerFunc {
 	return func(ctx Context) error {
 		arguments := make([]reflect.Value, h.introspection.Type().NumIn())
 		for i := 0; i < h.introspection.Type().NumIn(); i++ {
-			arguments[i] = h.introspection.FactoryMap()[i](ctx, nil)
+			argVal, err := h.introspection.FactoryMap()[i](ctx, nil)
+			if err != nil {
+				return err
+			}
+			arguments[i] = argVal
 		}
 
 		returnVal := h.reflectValue.Call(arguments)

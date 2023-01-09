@@ -1,6 +1,10 @@
 package router
 
 import (
+	"bytes"
+	"encoding/json"
+	"encoding/xml"
+	"io"
 	"mime"
 	"net/http"
 	"strings"
@@ -21,6 +25,15 @@ func (r builtinRequest) GetRequest() *http.Request {
 // Request replaces the underlying http.Request object
 func (r *builtinRequest) SetRequest(req *http.Request) {
 	r.request = req
+}
+
+/// Assistive functions
+
+// Body returns a copy of the request body
+func (r builtinRequest) Body() ([]byte, error) {
+	body, err := io.ReadAll(r.request.Body)
+	r.request.Body = io.NopCloser(bytes.NewBuffer(body))
+	return body, err
 }
 
 /// Route Parameters
@@ -46,6 +59,33 @@ func (r *builtinRequest) SetParams(params map[string]string) {
 }
 
 /// Util Functions
+
+// ParseString returns the request body as a string
+func (r *builtinRequest) ParseString() (string, error) {
+	data, err := r.Body()
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// ParseJSON will attempt to parse the request body as JSON
+func (r *builtinRequest) ParseJSON(obj interface{}) error {
+	data, err := r.Body()
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, obj)
+}
+
+// ParseXML will attempt to parse the request body as XML
+func (r *builtinRequest) ParseXML(obj interface{}) error {
+	data, err := r.Body()
+	if err != nil {
+		return err
+	}
+	return xml.Unmarshal(data, obj)
+}
 
 // HasContentType determines whether a request has a given mime type as its content type
 func (r builtinRequest) HasContentType(mimetype string) bool {
