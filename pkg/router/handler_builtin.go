@@ -10,7 +10,7 @@ import (
 
 var (
 	// ErrorNotAHandler is returned when an attempt to get a handler from an interface{} failed.
-	ErrorNotAHandler = errors.New("Given handler value is not of the type router.Handler")
+	ErrorNotAHandler = errors.New("given handler value is not of the type router.Handler")
 	// handlerInterface is the golang type reflection of a router handler
 	handlerInterface = reflect.TypeOf((*Handler)(nil)).Elem()
 	// handlerablenterface is the golang type reflection of a handleable
@@ -22,9 +22,6 @@ type builtinHandler struct {
 	// introspection contains the introspected type and argument information
 	introspection HandlerIntrospection
 
-	// contextValue may be a reflection of the context argument which has been filled
-	// with all expected dependencies ahead of time. This is for caching and performance purposes
-	contextValue reflect.Value
 	// reflectValue is a reflection of the handler object used to call the original handler
 	reflectValue reflect.Value
 	// reflectHandler is the current handler to be called when served
@@ -43,7 +40,11 @@ func (h *builtinHandler) AddMiddleware(middleware interface{}) error {
 	h.reflectHandler = func(ctx Context) error {
 		arguments := make([]reflect.Value, middleHandler.Introspection().Type().NumIn())
 		for i := 0; i < middleHandler.Introspection().Type().NumIn(); i++ {
-			arguments[i] = middleHandler.Introspection().FactoryMap()[i](ctx, oldHandler)
+			argVal, err := middleHandler.Introspection().FactoryMap()[i](ctx, oldHandler)
+			if err != nil {
+				return err
+			}
+			arguments[i] = argVal
 		}
 		returnVal := middleHandler.Value().Call(arguments)
 		if middleHandler.Introspection().CanError() && !returnVal[0].IsNil() {
@@ -68,7 +69,11 @@ func (h builtinHandler) HandlerFunc() HandlerFunc {
 	return func(ctx Context) error {
 		arguments := make([]reflect.Value, h.introspection.Type().NumIn())
 		for i := 0; i < h.introspection.Type().NumIn(); i++ {
-			arguments[i] = h.introspection.FactoryMap()[i](ctx, nil)
+			argVal, err := h.introspection.FactoryMap()[i](ctx, nil)
+			if err != nil {
+				return err
+			}
+			arguments[i] = argVal
 		}
 
 		returnVal := h.reflectValue.Call(arguments)
@@ -85,7 +90,6 @@ func (h builtinHandler) Serve(ctx Context) (err error) {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("%v: %s", e, string(debug.Stack()))
 		}
-		ctx.complete()
 	}()
 	return h.reflectHandler(ctx)
 }

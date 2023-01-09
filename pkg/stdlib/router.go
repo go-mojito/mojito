@@ -1,6 +1,7 @@
 package stdlib
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -16,6 +17,8 @@ type Router struct {
 	Routes     []router.Handler
 	Router     *httprouter.Router
 	Server     *http.Server
+
+	ErrorHandler router.Handler
 }
 
 // NewRouter will create new instance of the mojito stdlib router implementation
@@ -93,7 +96,7 @@ func (r *Router) WithRoute(method string, path string, handler interface{}) erro
 		}
 	}
 
-	r.Router.Handle(method, path, withMojitoHandlerRouter(h))
+	r.Router.Handle(method, path, r.withMojitoHandlerRouter(h))
 	r.Routes = append(r.Routes, h)
 	return nil
 }
@@ -103,7 +106,7 @@ func (r *Router) WithNotFoundHandler(handler interface{}) error {
 	if h, err := router.GetOrCreateHandler(handler); err != nil {
 		return err
 	} else {
-		r.Router.NotFound = withMojitoHandler(h)
+		r.Router.NotFound = r.withMojitoHandler(h)
 	}
 	return nil
 }
@@ -113,18 +116,19 @@ func (r *Router) WithMethodNotAllowedHandler(handler interface{}) error {
 	if h, err := router.GetOrCreateHandler(handler); err != nil {
 		return err
 	} else {
-		r.Router.MethodNotAllowed = withMojitoHandler(h)
+		r.Router.MethodNotAllowed = r.withMojitoHandler(h)
 	}
 	return nil
 }
 
 // WithErrorHandler will set the error handler for the router
 func (r *Router) WithErrorHandler(handler interface{}) error {
-	if h, err := router.GetOrCreateHandler(handler); err != nil {
+	h, err := router.GetOrCreateHandler(handler)
+	if err != nil {
 		return err
-	} else {
-		r.Router.PanicHandler = withMojitoHandlerError(h)
 	}
+	r.ErrorHandler = h
+	r.Router.PanicHandler = r.onError
 	return nil
 }
 
@@ -166,28 +170,23 @@ func (r *Router) Shutdown() error {
 	return r.Server.Close()
 }
 
-func withMojitoHandler(handler router.Handler) http.HandlerFunc {
-	return func(res http.ResponseWriter, req *http.Request) {
-		mreq := router.NewRequest(req)
-		mres := router.NewResponse(res)
-		ctx := router.NewContext(mreq, mres)
-		if err := handler.Serve(ctx); err != nil {
-			panic(err)
-		}
+func (r *Router) onError(res http.ResponseWriter, req *http.Request, rec interface{}) {
+	mreq := router.NewRequest(req)
+	mres := router.NewResponse(res)
+	ctx, cancel := router.NewContext(mreq, mres)
+	cancel(fmt.Errorf("%v", rec))
+	if err := r.ErrorHandler.Serve(ctx); err != nil {
+		panic(err)
 	}
 }
 
-func withMojitoHandlerError(handler router.Handler) func(http.ResponseWriter, *http.Request, interface{}) {
-	return func(res http.ResponseWriter, req *http.Request, rec interface{}) {
-		ctx := router.NewContextFromStdlib(res, req)
-		err := router.NewErrorContext(ctx, fmt.Errorf("%v", rec))
-		if err := handler.Serve(err); err != nil {
-			panic(err)
-		}
+func (r *Router) withMojitoHandler(handler router.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		r.withMojitoHandlerRouter(handler)(w, req, make(httprouter.Params, 0))
 	}
 }
 
-func withMojitoHandlerRouter(handler router.Handler) httprouter.Handle {
+func (r *Router) withMojitoHandlerRouter(handler router.Handler) httprouter.Handle {
 	return func(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		params := make(map[string]string)
 		for _, p := range ps {
@@ -196,9 +195,16 @@ func withMojitoHandlerRouter(handler router.Handler) httprouter.Handle {
 		mreq := router.NewRequest(req)
 		mreq.SetParams(params)
 		mres := router.NewResponse(res)
-		ctx := router.NewContext(mreq, mres)
-		if err := handler.Serve(ctx); err != nil {
-			panic(err)
+		ctx, cancel := router.NewContext(mreq, mres)
+		cancel(handler.Serve(ctx))
+		if ctx.Err() != context.Canceled {
+			if r.ErrorHandler != nil {
+				if err := r.ErrorHandler.Serve(ctx); err != context.Canceled {
+					panic(err)
+				}
+			} else {
+				panic(ctx.Err())
+			}
 		}
 	}
 }

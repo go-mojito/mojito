@@ -1,57 +1,26 @@
 package router
 
 import (
-	"encoding/json"
-	"encoding/xml"
+	"context"
 	"net/http"
 
 	"github.com/infinytum/structures"
 )
 
 type builtinContext struct {
+	context.Context
+	metadata structures.Map[string, interface{}]
 	request  Request
 	response Response
 
-	completed     bool
-	completedChan chan bool
-
-	metadata structures.Map[string, interface{}]
+	cancelCause error
 }
 
-// Request implements Context
-func (ctx *builtinContext) Request() Request {
-	return ctx.request
-}
-
-// Response implements Context
-func (ctx *builtinContext) Response() Response {
-	return ctx.response
-}
-
-/// Assistive functions
-
-// JSON writes any object to the response body as JSON
-func (ctx *builtinContext) JSON(body interface{}) error {
-	data, err := json.Marshal(body)
-	if err != nil {
-		return err
+func (ctx *builtinContext) Err() error {
+	if ctx.cancelCause != nil {
+		return ctx.cancelCause
 	}
-
-	ctx.Response().Header().Set("Content-Type", "application/json")
-	_, err = ctx.response.Write(data)
-	return err
-}
-
-// PrettyJSON writes any object to the response body as pretty JSON
-func (ctx *builtinContext) PrettyJSON(body interface{}) error {
-	data, err := json.MarshalIndent(body, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	ctx.Response().Header().Set("Content-Type", "application/json")
-	_, err = ctx.response.Write(data)
-	return err
+	return ctx.Context.Err()
 }
 
 // Metadata implements Context
@@ -59,44 +28,35 @@ func (ctx *builtinContext) Metadata() structures.Map[string, interface{}] {
 	return ctx.metadata
 }
 
-// ReadJSON reads the request body as JSON and unmarshals it into the given object
-func (ctx *builtinContext) ReadJSON(obj interface{}) error {
-	return json.NewDecoder(ctx.request.GetRequest().Body).Decode(obj)
+// Request implements Context
+func (ctx builtinContext) Request() Request {
+	return ctx.request
 }
 
-// ReadXML reads the request body as XML and unmarshals it into the given object
-func (ctx *builtinContext) ReadXML(obj interface{}) error {
-	return xml.NewDecoder(ctx.request.GetRequest().Body).Decode(obj)
+// Response implements Context
+func (ctx builtinContext) Response() Response {
+	return ctx.response
 }
 
-// String will write a string to the response body
-func (ctx *builtinContext) String(body string) error {
-	_, err := ctx.response.Write([]byte(body))
-	return err
+// SetValue modifies the context with a new value
+func (ctx *builtinContext) SetValue(key any, val any) {
+	ctx.Context = context.WithValue(ctx.Context, key, val)
 }
 
-func (ctx *builtinContext) complete() {
-	ctx.completed = true
-	close(ctx.completedChan)
-}
-
-func (ctx *builtinContext) Completed() bool {
-	return ctx.completed
-}
-
-func (ctx *builtinContext) CompletedChan() chan bool {
-	return ctx.completedChan
-}
-
-func NewContextFromStdlib(w http.ResponseWriter, req *http.Request) *builtinContext {
+func NewContextFromStdlib(w http.ResponseWriter, req *http.Request) (Context, func(cause error)) {
 	return NewContext(NewRequest(req), NewResponse(w))
 }
 
-func NewContext(req Request, res Response) *builtinContext {
-	return &builtinContext{
-		request:       req,
-		response:      res,
-		completedChan: make(chan bool),
-		metadata:      structures.NewMap[string, interface{}](),
+func NewContext(req Request, res Response) (Context, func(cause error)) {
+	parentCtx, cancel := context.WithCancel(context.Background())
+	ctx := &builtinContext{
+		Context:  parentCtx,
+		metadata: structures.NewMap[string, interface{}](),
+		request:  req,
+		response: res,
+	}
+	return ctx, func(cause error) {
+		ctx.cancelCause = cause
+		cancel()
 	}
 }

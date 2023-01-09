@@ -3,7 +3,7 @@ package stdlib
 import (
 	"bytes"
 	"html/template"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -20,7 +20,7 @@ type Renderer struct {
 // Render will load a template file and render the template
 // within using the viewbag as a context
 func (b Renderer) Render(view string, bag renderer.ViewBag) (string, error) {
-	file, err := ioutil.ReadFile(b.normalizeViewPath(view))
+	file, err := os.ReadFile(b.normalizeViewPath(view))
 	if err != nil {
 		return "", err
 	}
@@ -37,7 +37,7 @@ func (b Renderer) Render(view string, bag renderer.ViewBag) (string, error) {
 }
 
 // SetTemplateDir will set the base directory where views are located
-func (b Renderer) SetTemplateDir(path string) error {
+func (b *Renderer) SetTemplateDir(path string) error {
 	b.templateDir = path
 	return nil
 }
