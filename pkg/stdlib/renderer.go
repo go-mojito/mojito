@@ -37,7 +37,7 @@ func (b Renderer) Render(view string, bag renderer.ViewBag) (string, error) {
 }
 
 // SetTemplateDir will set the base directory where views are located
-func (b Renderer) SetTemplateDir(path string) error {
+func (b *Renderer) SetTemplateDir(path string) error {
 	b.templateDir = path
 	return nil
 }
