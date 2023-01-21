@@ -39,7 +39,7 @@ func init() {
 		return reflect.ValueOf(newMojitoContext(ctx)), nil
 	})
 
-	router.RegisterHandlerArgFactory[RendererContext](func(ctx router.Context, next router.HandlerFunc) (reflect.Value, error) {
+	router.RegisterStatefulHandlerArgFactory[RendererContext](func(ctx router.Context, next router.HandlerFunc) (reflect.Value, error) {
 		return reflect.ValueOf(NewRenderContext(ctx)), nil
 	})
 }
