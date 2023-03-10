@@ -54,20 +54,29 @@ func (ctx *builtinContext) EnableReadCheck() {
 
 func (ctx *builtinContext) Receive(out interface{}) (err error) {
 	outType := reflect.TypeOf(out)
+	valType := reflect.ValueOf(out)
 	for outType != nil && outType.Kind() == reflect.Pointer {
 		outType = outType.Elem()
+		valType = valType.Elem()
 	}
 
 	if outType == nil || outType.Kind() == reflect.Struct || outType.Kind() == reflect.Interface || outType.Kind() == reflect.Map {
 		err = ctx.conn.ReadJSON(out)
 	} else if outType.AssignableTo(reflect.TypeOf([]byte(""))) {
 		_, data, err2 := ctx.conn.ReadMessage()
-		copy(out.([]byte), data)
+		valType.SetBytes(data)
+		err = err2
+	} else if outType.AssignableTo(reflect.TypeOf("")) {
+		_, data, err2 := ctx.conn.ReadMessage()
+		valType.SetString(string(data))
 		err = err2
 	} else {
 		err = errors.New("unsupported target type, must be struct, interface, map or byte array")
+		return
 	}
-	if err != nil && err == io.EOF {
+
+	// Close connection since read underneath failed
+	if err != nil {
 		ctx.closed = true
 		err = ctx.conn.Close()
 	}
