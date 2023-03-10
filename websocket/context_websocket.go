@@ -32,6 +32,13 @@ func (ctx *builtinContext) Closed() bool {
 	return ctx.closed
 }
 
+func (ctx *builtinContext) close() {
+	ctx.closed = true
+	if err := ctx.conn.Close(); err != nil {
+		log.Errorf("Error while closing websocket connection: %v", err)
+	}
+}
+
 // EnableReadCheck will enable a function that will ensure the closed status is set when the connection is closed by the client
 // by continuously attempting to read on the channel. This is helpful for when you are only interested in sending on your socket.
 // DO NOT ENABLE THIS WHEN YOU WANT TO READ, YOU WILL LOOSE INCOMING DATA!
@@ -39,10 +46,7 @@ func (ctx *builtinContext) EnableReadCheck() {
 	go func() {
 		for {
 			if _, err := ctx.conn.UnderlyingConn().Read(make([]byte, 1)); err != nil && err == io.EOF && !ctx.closed {
-				ctx.closed = true
-				if err := ctx.conn.Close(); err != nil {
-					log.Errorf("Error while closing websocket connection: %v", err)
-				}
+				ctx.close()
 				return
 			}
 			if ctx.closed {
@@ -81,10 +85,7 @@ func (ctx *builtinContext) Receive(out interface{}) (err error) {
 
 	// Close connection since read underneath failed
 	if err != nil {
-		ctx.closed = true
-		if err := ctx.conn.Close(); err != nil {
-			log.Errorf("Error while closing websocket connection: %v", err)
-		}
+		ctx.close()
 	}
 	return
 }
@@ -111,10 +112,7 @@ func (ctx *builtinContext) Send(data interface{}) (err error) {
 
 	// Close connection since read underneath failed
 	if err != nil {
-		ctx.closed = true
-		if err := ctx.conn.Close(); err != nil {
-			log.Errorf("Error while closing websocket connection: %v", err)
-		}
+		ctx.close()
 	}
 	return
 }
