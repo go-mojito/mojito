@@ -110,7 +110,7 @@ func (ctx *builtinContext) Send(data interface{}) (err error) {
 		err = errors.New("unsupported data type")
 	}
 
-	// Close connection since read underneath failed
+	// Close connection since send underneath failed
 	if err != nil {
 		ctx.close()
 	}
