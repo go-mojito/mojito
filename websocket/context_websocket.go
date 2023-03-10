@@ -32,6 +32,13 @@ func (ctx *builtinContext) Closed() bool {
 	return ctx.closed
 }
 
+func (ctx *builtinContext) close() {
+	ctx.closed = true
+	if err := ctx.conn.Close(); err != nil {
+		log.Errorf("Error while closing websocket connection: %v", err)
+	}
+}
+
 // EnableReadCheck will enable a function that will ensure the closed status is set when the connection is closed by the client
 // by continuously attempting to read on the channel. This is helpful for when you are only interested in sending on your socket.
 // DO NOT ENABLE THIS WHEN YOU WANT TO READ, YOU WILL LOOSE INCOMING DATA!
@@ -39,10 +46,7 @@ func (ctx *builtinContext) EnableReadCheck() {
 	go func() {
 		for {
 			if _, err := ctx.conn.UnderlyingConn().Read(make([]byte, 1)); err != nil && err == io.EOF && !ctx.closed {
-				ctx.closed = true
-				if err := ctx.conn.Close(); err != nil {
-					log.Errorf("Error while closing websocket connection: %v", err)
-				}
+				ctx.close()
 				return
 			}
 			if ctx.closed {
@@ -53,28 +57,44 @@ func (ctx *builtinContext) EnableReadCheck() {
 }
 
 func (ctx *builtinContext) Receive(out interface{}) (err error) {
+	if ctx.closed {
+		return io.ErrClosedPipe
+	}
+
 	outType := reflect.TypeOf(out)
+	valType := reflect.ValueOf(out)
 	for outType != nil && outType.Kind() == reflect.Pointer {
 		outType = outType.Elem()
+		valType = valType.Elem()
 	}
 
 	if outType == nil || outType.Kind() == reflect.Struct || outType.Kind() == reflect.Interface || outType.Kind() == reflect.Map {
 		err = ctx.conn.ReadJSON(out)
 	} else if outType.AssignableTo(reflect.TypeOf([]byte(""))) {
 		_, data, err2 := ctx.conn.ReadMessage()
-		copy(out.([]byte), data)
+		valType.SetBytes(data)
+		err = err2
+	} else if outType.AssignableTo(reflect.TypeOf("")) {
+		_, data, err2 := ctx.conn.ReadMessage()
+		valType.SetString(string(data))
 		err = err2
 	} else {
 		err = errors.New("unsupported target type, must be struct, interface, map or byte array")
+		return
 	}
-	if err != nil && err == io.EOF {
-		ctx.closed = true
-		err = ctx.conn.Close()
+
+	// Close connection since read underneath failed
+	if err != nil {
+		ctx.close()
 	}
 	return
 }
 
 func (ctx *builtinContext) Send(data interface{}) (err error) {
+	if ctx.closed {
+		return io.ErrClosedPipe
+	}
+
 	dataType := reflect.TypeOf(data)
 	for dataType != nil && dataType.Kind() == reflect.Pointer {
 		dataType = dataType.Elem()
@@ -89,8 +109,10 @@ func (ctx *builtinContext) Send(data interface{}) (err error) {
 	} else {
 		err = errors.New("unsupported data type")
 	}
-	if err != nil && err == io.EOF {
-		ctx.closed = true
+
+	// Close connection since send underneath failed
+	if err != nil {
+		ctx.close()
 	}
 	return
 }
