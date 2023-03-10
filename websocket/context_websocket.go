@@ -53,6 +53,10 @@ func (ctx *builtinContext) EnableReadCheck() {
 }
 
 func (ctx *builtinContext) Receive(out interface{}) (err error) {
+	if ctx.closed {
+		return io.ErrClosedPipe
+	}
+
 	outType := reflect.TypeOf(out)
 	valType := reflect.ValueOf(out)
 	for outType != nil && outType.Kind() == reflect.Pointer {
@@ -78,12 +82,18 @@ func (ctx *builtinContext) Receive(out interface{}) (err error) {
 	// Close connection since read underneath failed
 	if err != nil {
 		ctx.closed = true
-		err = ctx.conn.Close()
+		if err := ctx.conn.Close(); err != nil {
+			log.Errorf("Error while closing websocket connection: %v", err)
+		}
 	}
 	return
 }
 
 func (ctx *builtinContext) Send(data interface{}) (err error) {
+	if ctx.closed {
+		return io.ErrClosedPipe
+	}
+
 	dataType := reflect.TypeOf(data)
 	for dataType != nil && dataType.Kind() == reflect.Pointer {
 		dataType = dataType.Elem()
@@ -98,8 +108,13 @@ func (ctx *builtinContext) Send(data interface{}) (err error) {
 	} else {
 		err = errors.New("unsupported data type")
 	}
-	if err != nil && err == io.EOF {
+
+	// Close connection since read underneath failed
+	if err != nil {
 		ctx.closed = true
+		if err := ctx.conn.Close(); err != nil {
+			log.Errorf("Error while closing websocket connection: %v", err)
+		}
 	}
 	return
 }

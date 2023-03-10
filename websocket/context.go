@@ -29,6 +29,7 @@ var upgrader = websocket.Upgrader{
 // Context defines a context for websocket functionality.
 type Context interface {
 	router.Context
+	Closed() bool
 	EnableReadCheck()
 	Receive(out interface{}) error
 	Send(data interface{}) error
