@@ -21,7 +21,7 @@ type CORSConfig struct {
 	// The Access-Control-Allow-Methods response header specifies one or more methods allowed when
 	// accessing a resource in response to a preflight request.
 	//
-	// Optional. Default value DefaultCORSConfig.AllowMethods.
+	// Optional. Default value "GET,POST,HEAD,PUT,DELETE,PATCH"
 	//
 	// See also: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
 	AllowMethods []string
@@ -37,7 +37,7 @@ type CORSConfig struct {
 	// The Access-Control-Allow-Credentials response header tells browsers whether to expose the response
 	// to the frontend JavaScript code when the request's credentials mode (Request.credentials) is include.
 	//
-	// Optional. Default value false, in which case the header is not set.
+	// Optional. Default value false.
 	//
 	// See also: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
 	AllowCredentials bool
@@ -45,7 +45,7 @@ type CORSConfig struct {
 	// The Access-Control-Expose-Headers response header allows a server to indicate which response headers
 	// should be made available to scripts running in the browser, in response to a cross-origin request.
 	//
-	// Optional. Default value []string{}, in which case the header is not set.
+	// Optional. Default value []string{}.
 	//
 	// See also: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers
 	ExposeHeaders []string `yaml:"expose_headers"`
@@ -54,7 +54,7 @@ type CORSConfig struct {
 	// (that is the information contained in the Access-Control-Allow-Methods and Access-Control-Allow-Headers headers)
 	// can be cached.
 	//
-	// Optional. Default value 0.  The header is set only if MaxAge > 0.
+	// Optional. Default value 0.
 	//
 	// See also: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age
 	MaxAge int
@@ -63,8 +63,11 @@ type CORSConfig struct {
 var (
 	// CORSDefault is the default CORS config.
 	CORSDefault = CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+		AllowHeaders:     []string{},
+		AllowCredentials: false,
+		ExposeHeaders:    []string{},
 	}
 )
 
@@ -93,7 +96,9 @@ func CORSWithConfig(config CORSConfig) func(ctx mojito.Context, next func() erro
 		ctx.Response().Header().Set("Vary", "Origin")
 
 		isPreflight := ctx.Request().GetRequest().Method == http.MethodOptions
-		origin := ctx.Request().GetRequest().Header.Get("Origin")
+
+		// Get origin from request headers.
+		origin := ctx.Request().Header("Origin")
 		allowOrigin := ""
 
 		// No Origin header present. Probably not a browser client
@@ -112,12 +117,19 @@ func CORSWithConfig(config CORSConfig) func(ctx mojito.Context, next func() erro
 				allowOrigin = o
 				break
 			}
-		}
-		// Check if origin matches allowedOrigins patterns
-		for _, pattern := range allowedOrigins {
-			if match, _ := regexp.MatchString(pattern, origin); match {
+			if matchSubdomain(origin, o) {
 				allowOrigin = origin
 				break
+			}
+		}
+
+		// If no match was found, check if origin matches allowedOrigins patterns
+		if allowOrigin == "" {
+			for _, pattern := range allowedOrigins {
+				if match, _ := regexp.MatchString(pattern, origin); match {
+					allowOrigin = origin
+					break
+				}
 			}
 		}
 
@@ -154,7 +166,7 @@ func CORSWithConfig(config CORSConfig) func(ctx mojito.Context, next func() erro
 		if allowedHeaders != "" {
 			ctx.Response().Header().Set("Access-Control-Allow-Headers", allowedHeaders)
 		} else {
-			h := ctx.Request().GetRequest().Header.Get("Access-Control-Request-Headers")
+			h := ctx.Request().Header("Access-Control-Request-Headers")
 			if h != "" {
 				ctx.Response().Header().Set("Access-Control-Allow-Headers", h)
 			}
@@ -169,4 +181,60 @@ func CORSWithConfig(config CORSConfig) func(ctx mojito.Context, next func() erro
 		_, err := ctx.Response().Write(nil)
 		return err
 	}
+}
+
+const maxDomainLength = 253
+
+func matchSubdomain(domain string, pattern string) bool {
+	if !matchScheme(domain, pattern) {
+		return false
+	}
+
+	// Get url minus the scheme indexes
+	d := strings.Index(domain, "://")
+	p := strings.Index(pattern, "://")
+	if d == -1 || p == -1 {
+		return false
+	}
+
+	// Get urls minus the scheme
+	dom := domain[d+3:]
+	pat := pattern[p+3:]
+
+	// To avoid long looping due to too long domain
+	if len(domain) > maxDomainLength {
+		return false
+	}
+
+	// Get parts of the domain and pattern and reorganize them
+	dparts := strings.Split(dom, ".")
+	pparts := strings.Split(pat, ".")
+	for i := len(dparts)/2 - 1; i >= 0; i-- {
+		opp := len(dparts) - 1 - i
+		dparts[i], dparts[opp] = dparts[opp], dparts[i]
+	}
+	for i := len(pparts)/2 - 1; i >= 0; i-- {
+		opp := len(pparts) - 1 - i
+		pparts[i], pparts[opp] = pparts[opp], pparts[i]
+	}
+
+	// Attempt to match the parts
+	for i, v := range dparts {
+		if len(pparts) <= i {
+			return false
+		}
+		if pparts[i] == "*" {
+			return true
+		}
+		if pparts[i] != v {
+			return false
+		}
+	}
+	return false
+}
+
+func matchScheme(domain string, pattern string) bool {
+	d := strings.Index(domain, ":")
+	p := strings.Index(pattern, ":")
+	return d != -1 && p != -1 && domain[:d] == pattern[:p]
 }
