@@ -44,13 +44,13 @@ func (b *Renderer) SetTemplateDir(path string) error {
 
 // TemplateDir will return the absolute path of the configured templates directory
 func (b Renderer) TemplateDir() string {
-	dir := internal.ResourcesDir + "/templates"
+	dir := internal.ResourcesDir() + "/templates"
 	if b.templateDir != "" {
 		dir = b.templateDir
 	}
 	path, err := filepath.Abs(dir)
 	if err != nil {
-		return internal.ResourcesDir + "/templates/"
+		return internal.ResourcesDir() + "/templates/"
 	}
 	return path + "/"
 }
