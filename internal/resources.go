@@ -4,12 +4,15 @@ import (
 	"os"
 )
 
-var ResourcesDir = ""
+var ResourcesDirVal = ""
 
-func init() {
-	resDir, err := os.Getwd()
-	if err != nil {
-		panic(err)
+func ResourcesDir() string {
+	if ResourcesDirVal == "" {
+		resDir, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+		ResourcesDirVal = resDir + "/resources/"
 	}
-	ResourcesDir = resDir + "/resources/"
+	return ResourcesDirVal
 }
