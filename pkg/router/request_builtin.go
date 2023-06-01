@@ -36,6 +36,11 @@ func (r builtinRequest) Body() ([]byte, error) {
 	return body, err
 }
 
+// Header returns the first value for the given header name
+func (r builtinRequest) Header(name string) string {
+	return r.request.Header.Get(name)
+}
+
 /// Route Parameters
 
 // Param returns the route parameter or empty string if not found

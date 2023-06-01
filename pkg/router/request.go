@@ -14,6 +14,9 @@ type Request interface {
 	// Body returns a copy of the request body
 	Body() ([]byte, error)
 
+	// Header returns the first value for the given header name
+	Header(name string) string
+
 	/// Route Parameters
 
 	// Param returns the route parameter or empty string if not found
