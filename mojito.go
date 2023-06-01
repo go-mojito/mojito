@@ -104,13 +104,13 @@ func ResolveNamed(name string, obj interface{}) error {
 
 // SetResourcesDir will set the base directory where resources are located
 func SetResourcesDir(path string) error {
-	internal.ResourcesDir = path
+	internal.ResourcesDirVal = path
 	return nil
 }
 
 // ResourcesDir will return the base directory where resources are located
 func ResourcesDir() string {
-	return internal.ResourcesDir
+	return internal.ResourcesDir()
 }
 
 /// Router Helpers
