@@ -22,7 +22,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
           check-latest: true
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run Golint
         uses: reviewdog/action-golangci-lint@v2
         with:
