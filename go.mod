@@ -1,6 +1,6 @@
 module github.com/go-mojito/mojito
 
-go 1.20
+go 1.23
 
 require (
 	github.com/andybalholm/brotli v1.1.0
