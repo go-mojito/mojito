@@ -188,7 +188,7 @@ func (r *Router) withMojitoHandler(handler router.Handler) http.HandlerFunc {
 
 func (r *Router) withMojitoHandlerRouter(handler router.Handler) httprouter.Handle {
 	return func(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
-		params := make(map[string]string)
+		params := make(map[string]string, len(ps))
 		for _, p := range ps {
 			params[p.Key] = p.Value
 		}
