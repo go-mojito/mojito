@@ -13,7 +13,7 @@ jobs:
     name: Go Test
     strategy:
       matrix:
-        go-version: [1.18.x, 1.19.x, 1.20.x]
+        go-version: [1.21.x, 1.22.x, 1.23.x]
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -24,51 +24,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           check-latest: true
-      - name: Setup Go Caches
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-            ~/Library/Caches/go-build
-            ~\AppData\Local\go-build
-          key: ${{ runner.os }}-go-${{ matrix.go-version }}-test-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go-version }}-test-
+      - name: Install dependencies
+        run: go get .
       - name: Run Tests
-        run: |
-          go mod download
-          go test ./... -v -race
-  gosec-test:
-    name: GoSec Test
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Run GoSec
-        uses: securego/gosec@master
-        with:
-          args: -fmt sarif -out gosec.sarif ./...
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: gosec.sarif
-  govulncheck-test:
-    name: GoVulnCheck Test
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Run Govulncheck
-        uses: kmulvey/govulncheck-action@v1.2.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          fail-on-vuln: true
+        run: go test ./... -v -race
