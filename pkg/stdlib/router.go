@@ -199,7 +199,7 @@ func (r *Router) withMojitoHandlerRouter(handler router.Handler) httprouter.Hand
 		cancel(handler.Serve(ctx))
 		if ctx.Err() != context.Canceled {
 			if r.ErrorHandler != nil {
-				if err := r.ErrorHandler.Serve(ctx); err != context.Canceled {
+				if err := r.ErrorHandler.Serve(ctx); err != nil && err != context.Canceled {
 					panic(err)
 				}
 			} else {
