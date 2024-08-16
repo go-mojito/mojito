@@ -28,6 +28,11 @@ func (ctx *mojitoContext) ReadXML(obj interface{}) error {
 	return ctx.Request().ParseXML(obj)
 }
 
+// Status will set the HTTP status code on the response
+func (ctx *mojitoContext) Status(code int) {
+	ctx.Response().WriteHeader(code)
+}
+
 // String will write a string to the response body
 func (ctx *mojitoContext) String(body string) error {
 	return ctx.Response().WriteString(body)

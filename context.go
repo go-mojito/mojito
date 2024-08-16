@@ -25,6 +25,9 @@ type Context interface {
 	// ReadXML reads the request body as XML and unmarshals it into the given object
 	ReadXML(obj interface{}) error
 
+	// Status will set the HTTP status code on the response
+	Status(code int)
+
 	// String will write a string to the response body
 	String(body string) error
 }
