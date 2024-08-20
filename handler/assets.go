@@ -24,7 +24,7 @@ func Assets(ctx mojito.Context) error {
 	fsPath := mojito.ResourcesDir() + AssetsPrefix
 	fsInfo, err := os.Stat(fsPath)
 	if err != nil {
-		log.Errorf("Error while accessing assets path %s: %s", fsPath, err.Error())
+		log.Error().Msgf("Error while accessing assets path %s: %s", fsPath, err.Error())
 		return err
 	}
 

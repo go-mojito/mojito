@@ -12,10 +12,10 @@ import (
 func Logging(ctx mojito.Context, next func() error) (err error) {
 	var start = time.Now()
 	err = next()
-	go log.Fields(logger.Fields{
+	go log.Info().Fields(logger.Fields{
 		"method": ctx.Request().GetRequest().Method,
 		"ms":     time.Since(start).Milliseconds(),
-	}).Info(ctx.Request().GetRequest().URL.Path)
+	}).Msg(ctx.Request().GetRequest().URL.Path)
 	return err
 }
 

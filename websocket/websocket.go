@@ -39,7 +39,8 @@ func (ws *WebSocket) WithChannel(name string, handler interface{}) *WebSocket {
 	}); err != nil {
 		log.
 			Field("state", "with_channel").
-			Error(err)
+			Error().
+			Msg(err)
 	}
 	return ws
 }
@@ -54,7 +55,8 @@ func (ws *WebSocket) WithAsyncChannel(name string, handler interface{}) *WebSock
 	}); err != nil {
 		log.
 			Field("state", "with_async_channel").
-			Error(err)
+			Error().
+			Msg(err)
 	}
 	return ws
 }
@@ -100,7 +102,8 @@ func (ws *WebSocket) ToHandler() interface{} {
 					log.
 						Field("remote", ctx.Request().GetRequest().RemoteAddr).
 						Field("state", "sending").
-						Error(err)
+						Error().
+						Msg(err)
 				}
 			}
 		}
@@ -116,7 +119,8 @@ func receiverChannel(ctx Context) chan Message {
 				log.
 					Field("remote", ctx.Request().GetRequest().RemoteAddr).
 					Field("state", "receiving").
-					Error(err)
+					Error().
+					Msg(err)
 			}
 			close(ch)
 			return
@@ -135,7 +139,8 @@ func callHandler(h router.Handler, ctx Context, handlerCtx router.Context) {
 			log.
 				Field("remote", ctx.Request().GetRequest().RemoteAddr).
 				Field("state", "sending").
-				Error(err)
+				Error().
+				Msg(err)
 		}
 	}
 }
