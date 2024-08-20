@@ -2,6 +2,7 @@ package stdlib
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 
@@ -86,7 +87,7 @@ func (z *Logger) Fatal() logger.Logger {
 
 // Msg will write the log message
 func (z *Logger) Msg(msg interface{}) {
-	z.Msgf("%v", msg)
+	z.Msgf(fmt.Sprintf("%v", msg))
 }
 
 // Msgf will write the log message sprintf-style
