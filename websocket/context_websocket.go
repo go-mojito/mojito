@@ -19,7 +19,7 @@ type builtinContext struct {
 
 // Response implements WebSocketContext
 func (*builtinContext) Response() router.Response {
-	log.Warn("Response() is not supported for WebSockets as the raw connection is managed by the server")
+	log.Warn().Msg("Response() is not supported for WebSockets as the raw connection is managed by the server")
 	return nil
 }
 
@@ -35,7 +35,7 @@ func (ctx *builtinContext) Closed() bool {
 func (ctx *builtinContext) close() {
 	ctx.closed = true
 	if err := ctx.conn.Close(); err != nil {
-		log.Errorf("Error while closing websocket connection: %v", err)
+		log.Error().Msgf("Error while closing websocket connection: %v", err)
 	}
 }
 

@@ -47,7 +47,7 @@ func init() {
 // DefaultCache will return the default cache instance for the mojito.Cache type
 func DefaultCache() (cache Cache) {
 	if err := injector.InjectInto(&cache); err != nil {
-		DefaultLogger().Field("dependency", "cache").Error(err)
+		DefaultLogger().Error().Field("dependency", "cache").Msg(err)
 	}
 	return
 }
@@ -63,7 +63,7 @@ func DefaultLogger() (logger Logger) {
 // DefaultRenderer will return the default renderer instance for the mojito.Renderer type
 func DefaultRenderer() (renderer Renderer) {
 	if err := injector.InjectInto(&renderer); err != nil {
-		DefaultLogger().Field("dependency", "renderer").Error(err)
+		DefaultLogger().Error().Field("dependency", "renderer").Msg(err)
 	}
 	return
 }
@@ -71,7 +71,7 @@ func DefaultRenderer() (renderer Renderer) {
 // DefaultRouter will return the default router instance for the mojito.Router type
 func DefaultRouter() (router Router) {
 	if err := injector.InjectInto(&router); err != nil {
-		DefaultLogger().Field("dependency", "router").Error(err)
+		DefaultLogger().Error().Field("dependency", "router").Msg(err)
 	}
 	return
 }
