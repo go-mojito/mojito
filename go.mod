@@ -3,7 +3,7 @@ module github.com/go-mojito/mojito
 go 1.23
 
 require (
-	github.com/andybalholm/brotli v1.1.0
+	github.com/andybalholm/brotli v1.1.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/infinytum/injector v0.0.3
 	github.com/infinytum/introspector v0.0.0-20221124203324-542f216aab81
