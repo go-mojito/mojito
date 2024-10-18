@@ -35,7 +35,7 @@ func (ctx *builtinContext) Closed() bool {
 func (ctx *builtinContext) close() {
 	ctx.closed = true
 	if err := ctx.conn.Close(); err != nil {
-		log.Errorf("Error while closing websocket connection: %v", err)
+		log.Error("Error while closing websocket connection", "error", err)
 	}
 }
 

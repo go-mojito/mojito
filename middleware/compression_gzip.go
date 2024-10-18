@@ -16,7 +16,7 @@ func compressGzip(ctx mojito.Context, next func() error) error {
 
 	defer func() {
 		if err := writer.Close(); err != nil {
-			log.Error(err)
+			log.Error(err.Error())
 		}
 		ctx.Response().SetWriter(originalWriter)
 	}()
