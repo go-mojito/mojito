@@ -13,7 +13,7 @@ func compressBrotli(ctx mojito.Context, next func() error) (err error) {
 	writer := brotli.NewWriter(originalWriter)
 	defer func() {
 		if err := writer.Close(); err != nil {
-			log.Error(err)
+			log.Error(err.Error())
 		}
 		ctx.Response().SetWriter(originalWriter)
 	}()

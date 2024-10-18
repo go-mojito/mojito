@@ -2,6 +2,7 @@ package mojito
 
 import (
 	"fmt"
+	"log/slog"
 	"reflect"
 
 	"github.com/go-mojito/mojito/internal"
@@ -18,7 +19,7 @@ func init() {
 	}
 
 	if err := injector.Singleton(func() Logger {
-		return stdlib.NewLogger()
+		return slog.Default()
 	}); err != nil {
 		fmt.Println("Cannot register default logger dependency: ", err)
 	}
@@ -47,7 +48,7 @@ func init() {
 // DefaultCache will return the default cache instance for the mojito.Cache type
 func DefaultCache() (cache Cache) {
 	if err := injector.InjectInto(&cache); err != nil {
-		DefaultLogger().Field("dependency", "cache").Error(err)
+		DefaultLogger().With("dependency", "cache").Error(err.Error())
 	}
 	return
 }
@@ -63,7 +64,7 @@ func DefaultLogger() (logger Logger) {
 // DefaultRenderer will return the default renderer instance for the mojito.Renderer type
 func DefaultRenderer() (renderer Renderer) {
 	if err := injector.InjectInto(&renderer); err != nil {
-		DefaultLogger().Field("dependency", "renderer").Error(err)
+		DefaultLogger().With("dependency", "renderer").Error(err.Error())
 	}
 	return
 }
@@ -71,7 +72,7 @@ func DefaultRenderer() (renderer Renderer) {
 // DefaultRouter will return the default router instance for the mojito.Router type
 func DefaultRouter() (router Router) {
 	if err := injector.InjectInto(&router); err != nil {
-		DefaultLogger().Field("dependency", "router").Error(err)
+		DefaultLogger().With("dependency", "router").Error(err.Error())
 	}
 	return
 }
