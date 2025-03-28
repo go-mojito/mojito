@@ -1,6 +1,7 @@
 module github.com/go-mojito/mojito
 
 go 1.23
+toolchain go1.24.1
 
 require (
 	github.com/andybalholm/brotli v1.1.1
@@ -10,7 +11,7 @@ require (
 	github.com/infinytum/structures v0.0.3
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mitchellh/hashstructure/v2 v2.0.2
-	golang.org/x/net v0.33.0
+	golang.org/x/net v0.38.0
 )
 
-require golang.org/x/text v0.21.0 // indirect
+require golang.org/x/text v0.23.0 // indirect
